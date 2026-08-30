@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/quiz">Start Quiz</a>
+        <a href="/result_history">My Results</a>
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="card dashboard-card">
+
+            <h1>Welcome, Student! 👋</h1>
+
+            <h2>Student Dashboard</h2>
+
+            <p class="subtitle">
+                Test your knowledge and track your quiz performance.
+            </p>
+
+            <div class="dashboard-buttons">
+
+                <a href="/quiz" class="btn">
+                    📝 Start Quiz
+                </a>
+
+                <a href="/result_history" class="btn">
+                    📊 Result History
+                </a>
+
+                <a href="/logout" class="btn logout-btn">
+                    🚪 Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

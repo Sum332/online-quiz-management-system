@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>Student Registration</h1>
+
+            <form method="POST">
+
+                <label>Full Name</label>
+                <input type="text"
+                       name="name"
+                       placeholder="Enter your full name"
+                       required>
+
+                <label>Email Address</label>
+                <input type="email"
+                       name="email"
+                       placeholder="Enter your email"
+                       required>
+
+                <label>Phone Number</label>
+                <input type="tel"
+                       name="phone"
+                       placeholder="Enter your phone number"
+                       required>
+
+                <label>Password</label>
+                <input type="password"
+                       name="password"
+                       placeholder="Create a password"
+                       required>
+
+                <button type="submit">Create Account</button>
+
+            </form>
+
+            <br>
+
+            <p class="center">
+                Already have an account?
+                <a href="/login">Login here</a>
+            </p>
+
+            <p class="center">
+                <a href="/">Back to Home</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

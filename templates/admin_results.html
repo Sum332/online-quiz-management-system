@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Results</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="/admin">Admin Dashboard</a>
+    <a href="/add_question">Add Question</a>
+    <a href="/view_questions">View Questions</a>
+    <a href="/admin_results">Student Results</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>📊 Student Results</h1>
+
+        {% if results %}
+
+        <table border="1" cellpadding="10" cellspacing="0">
+
+            <tr>
+                <th>ID</th>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Score</th>
+                <th>Total Questions</th>
+            </tr>
+
+            {% for result in results %}
+
+            <tr>
+                <td>{{ result.id }}</td>
+                <td>{{ result.name }}</td>
+                <td>{{ result.email }}</td>
+                <td>{{ result.score }}</td>
+                <td>{{ result.total_questions }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% else %}
+
+        <p>No student results available.</p>
+
+        {% endif %}
+
+        <br>
+
+        <a href="/admin">⬅️ Back to Admin Dashboard</a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

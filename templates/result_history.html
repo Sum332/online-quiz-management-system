@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Result History</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/quiz">Start Quiz</a>
+        <a href="/result_history">My Results</a>
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>📊 My Result History</h1>
+
+            {% if results %}
+
+                {% for result in results %}
+
+                    <div class="history-item">
+
+                        <h2>Quiz {{ result.id }}</h2>
+
+                        <p>
+                            Score:
+                            <strong>
+                                {{ result.score }} / {{ result.total_questions }}
+                            </strong>
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="history-item">
+                    <h2>No Results Yet</h2>
+                    <p>Complete a quiz to see your result here.</p>
+                </div>
+
+            {% endif %}
+
+            <br>
+
+            <a href="/dashboard" class="btn">
+                🏠 Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

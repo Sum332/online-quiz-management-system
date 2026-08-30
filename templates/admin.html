@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/admin">Admin Dashboard</a>
+        <a href="/add_question">Add Questions</a>
+        <a href="/view_questions">View Questions</a>
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="card dashboard-card">
+
+            <h1>Welcome, Admin! 👋</h1>
+
+            <h2>Admin Dashboard</h2>
+
+            <p class="subtitle">
+                Manage quiz questions and monitor the quiz system.
+            </p>
+
+            <div class="dashboard-buttons">
+
+                <a href="/add_question" class="btn">
+                    ➕ Add Questions
+                </a>
+
+                <a href="/view_questions" class="btn">
+                    📋 View Questions
+                </a>
+                <a href="/admin_results" class="btn">
+                    📊 View Student Results
+                </a>
+
+                <a href="/logout" class="btn logout-btn">
+                    🚪 Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

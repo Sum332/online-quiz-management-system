@@ -1,0 +1,289 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #1e293b;
+}
+
+/* Main Container */
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    margin-bottom: 25px;
+}
+
+/* Headings */
+h1 {
+    color: #0f172a;
+    margin-bottom: 25px;
+}
+
+h2 {
+    color: #1e293b;
+}
+
+h3 {
+    color: #334155;
+}
+
+/* Navigation */
+.nav {
+    background: #0f172a;
+    padding: 18px 30px;
+    text-align: center;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+.nav a:hover {
+    color: #38bdf8;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #2563eb;
+}
+
+/* Buttons */
+button,
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button:hover,
+.btn:hover {
+    background: #1d4ed8;
+}
+
+/* Quiz Question */
+.question-card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+}
+
+.option {
+    display: block;
+    padding: 12px;
+    margin: 10px 0;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #eff6ff;
+}
+
+.option input {
+    width: auto;
+    margin: 0 10px 0 0;
+}
+
+/* Result */
+.result {
+    text-align: center;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+.score {
+    font-size: 45px;
+    font-weight: bold;
+    color: #2563eb;
+    margin: 20px 0;
+}
+
+/* History */
+.history-item {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.07);
+}
+
+/* Center */
+.center {
+    text-align: center;
+}
+
+/* Links */
+a {
+    color: #2563eb;
+}
+
+a:hover {
+    color: #1d4ed8;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .container {
+        width: 94%;
+        margin: 20px auto;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .nav a {
+        display: block;
+        margin: 8px;
+    }
+}
+/* Navigation Bar */
+.navbar {
+    background: #0f172a;
+    padding: 25px 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.navbar a:hover {
+    color: #60a5fa;
+}
+.result-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 220px;
+    width: auto;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: visible;
+}
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.result-actions .btn {
+    margin: 0;
+}
+.quiz-timer {
+    background: #eef4ff;
+    border: 2px solid #2864e6;
+    color: #2864e6;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0 30px;
+}
+
+#timer {
+    font-weight: 800;
+}
+/* Dashboard Buttons */
+.dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.dashboard-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 220px;
+    margin: 0;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+}
+/* Dashboard Buttons */
+.dashboard-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.dashboard-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 220px;
+    margin: 0;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+}
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .navbar a {
+        font-size: 20px;
+    }
+}
