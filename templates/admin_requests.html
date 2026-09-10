@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Approval Requests | QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <nav class="nav">
+
+        <div class="nav-left">
+
+            <a href="/admin">
+                📊 Admin Dashboard
+            </a>
+
+            <a href="/admin/requests" class="active">
+                🔔 Approval Requests
+            </a>
+
+        </div>
+
+        <a href="/logout" class="profile-btn">
+            🚪 Logout
+        </a>
+
+    </nav>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <div class="container">
+
+        <div class="card approval-card">
+
+
+            <!-- HEADER -->
+
+            <div class="history-header">
+
+                <div class="history-icon">
+                    🔔
+                </div>
+
+                <span class="role-badge">
+                    ADMIN / TEACHER
+                </span>
+
+                <h1>
+                    Admin Approval Requests
+                </h1>
+
+                <p>
+                    Review and manage new Admin / Teacher requests.
+                </p>
+
+            </div>
+
+
+            <!-- REQUESTS -->
+
+            {% if requests %}
+
+                <div class="requests-list">
+
+                    {% for user in requests %}
+
+                        <div class="request-card">
+
+
+                            <!-- USER HEADER -->
+
+                            <div class="request-header">
+
+                                <div class="request-avatar">
+                                    👤
+                                </div>
+
+                                <div>
+
+                                    <h2>
+                                        {{ user.name }}
+                                    </h2>
+
+                                    <span class="pending-badge">
+                                        ⏳ Pending Approval
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- USER INFORMATION -->
+
+                            <div class="request-info">
+
+                                <div class="request-info-item">
+
+                                    <span>
+                                        📧
+                                    </span>
+
+                                    <div>
+
+                                        <small>
+                                            Email
+                                        </small>
+
+                                        <p>
+                                            {{ user.email }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="request-info-item">
+
+                                    <span>
+                                        📱
+                                    </span>
+
+                                    <div>
+
+                                        <small>
+                                            Phone
+                                        </small>
+
+                                        <p>
+                                            {{ user.phone }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACTIONS -->
+
+                            <div class="request-buttons">
+
+                                <a href="/admin/approve/{{ user.id }}"
+                                   class="btn approve-btn">
+
+                                    ✅ Approve
+
+                                </a>
+
+
+                                <a href="/admin/reject/{{ user.id }}"
+                                   class="btn reject-btn">
+
+                                    ❌ Reject
+
+                                </a>
+
+                            </div>
+
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <!-- EMPTY STATE -->
+
+                <div class="empty-results">
+
+                    <div class="empty-icon">
+                        🎉
+                    </div>
+
+                    <h2>
+                        No Pending Requests
+                    </h2>
+
+                    <p>
+                        There are currently no Admin / Teacher
+                        approval requests.
+                    </p>
+
+                    <a href="/admin" class="btn">
+                        📊 Back to Admin Dashboard
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- FOOTER -->
+
+            <div class="motivation-box">
+
+                <span>
+                    🛡️
+                </span>
+
+                <div>
+
+                    <strong>
+                        Admin Control Center
+                    </strong>
+
+                    <p>
+                        Review requests carefully before granting
+                        Admin / Teacher access.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

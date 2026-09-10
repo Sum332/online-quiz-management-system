@@ -3,52 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Student Dashboard - QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/quiz">Start Quiz</a>
-        <a href="/result_history">My Results</a>
-        <a href="/logout">Logout</a>
-    </nav>
+<nav class="navbar">
 
-    <div class="container">
+    <a href="/" style="font-size:24px;">
+        🎓 QuizMaster
+    </a>
 
-        <div class="card dashboard-card">
+    <a href="/dashboard">Dashboard</a>
 
-            <h1>Welcome, Student! 👋</h1>
+    <a href="/quiz">Start Quiz</a>
 
-            <h2>Student Dashboard</h2>
+    <a href="/result_history">My Results</a>
 
-            <p class="subtitle">
-                Test your knowledge and track your quiz performance.
-            </p>
+    <a href="/profile" class="profile-btn">
+        👤 Profile
+    </a>
 
-            <div class="dashboard-buttons">
+    <a href="/logout">
+        Logout
+    </a>
 
-                <a href="/quiz" class="btn">
-                    📝 Start Quiz
-                </a>
+</nav>
 
-                <a href="/result_history" class="btn">
-                    📊 Result History
-                </a>
 
-                <a href="/logout" class="btn logout-btn">
-                    🚪 Logout
-                </a>
+<div class="container">
 
-            </div>
+    <!-- Welcome Section -->
+    <div class="card center">
+
+        <div style="font-size:60px; margin-bottom:10px;">
+            🎓
+        </div>
+
+        <h1>Welcome, Student! 👋</h1>
+
+        <p style="font-size:18px; color:#64748b;">
+            Ready to challenge your knowledge?
+        </p>
+
+        <p style="color:#64748b;">
+            Take quizzes, improve your skills and track your progress.
+        </p>
+
+    </div>
+
+
+    <!-- Dashboard Features -->
+    <div class="card">
+
+        <h2 class="center">
+            What would you like to do?
+        </h2>
+
+        <div class="dashboard-buttons">
+
+            <a href="/quiz" class="btn">
+                📝 Start Quiz
+            </a>
+
+            <a href="/result_history" class="btn">
+                📊 My Results
+            </a>
+
+            <a href="/profile" class="btn">
+                👤 My Profile
+            </a>
+
+            <a href="/logout" class="btn">
+                🚪 Logout
+            </a>
 
         </div>
 
     </div>
+
+
+    <!-- Quick Info -->
+    <div class="card">
+
+        <h2>🚀 Keep Learning</h2>
+
+        <p style="color:#64748b;">
+            Every quiz is an opportunity to learn something new.
+            Challenge yourself and improve your score with every attempt.
+        </p>
+
+    </div>
+
+
+    <!-- Motivational Section -->
+    <div class="card center">
+
+        <h2>💡 Believe in Your Knowledge</h2>
+
+        <p style="font-size:18px; color:#475569;">
+            Learn • Practice • Improve • Succeed
+        </p>
+
+        <a href="/quiz" class="btn">
+            Start Your Quiz →
+        </a>
+
+    </div>
+
+</div>
+
+
+<footer style="
+    text-align:center;
+    color:white;
+    padding:25px;
+    margin-top:40px;
+">
+    © 2026 QuizMaster | Online Quiz Management System
+</footer>
 
 </body>
 </html>

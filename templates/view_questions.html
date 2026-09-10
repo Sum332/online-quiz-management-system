@@ -1,47 +1,206 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>View Questions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>View Questions | QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-    <h1>All Quiz Questions</h1>
+    <!-- Navigation -->
+    <nav class="nav">
 
-    {% if questions %}
+        <div class="nav-left">
 
-        {% for q in questions %}
+            <a href="/admin">
+                📊 Admin Dashboard
+            </a>
 
-            <h3>{{ q.id }}. {{ q.question }}</h3>
+            <a href="/add_question">
+                ➕ Add Questions
+            </a>
 
-            <p>A. {{ q.option_a }}</p>
-            <p>B. {{ q.option_b }}</p>
-            <p>C. {{ q.option_c }}</p>
-            <p>D. {{ q.option_d }}</p>
+            <a href="/view_questions">
+                📋 View Questions
+            </a>
 
-            <p>
-                <strong>Correct Answer: {{ q.correct_answer }}</strong>
-            </p>
-            <a href="/edit_question/{{ q.id }}" class="btn">
-    ✏️ Edit Question
-</a>
-<form method="POST" action="/delete_question/{{ q.id }}" style="display:inline;">
-    <button type="submit" onclick="return confirm('Are you sure you want to delete this question?');">
-        🗑️ Delete Question
-    </button>
-</form>
+        </div>
 
-            <hr>
+        <a href="/logout" class="profile-btn">
+            🚪 Logout
+        </a>
 
-        {% endfor %}
+    </nav>
 
-    {% else %}
 
-        <p>No questions available.</p>
+    <!-- Main Content -->
+    <div class="container">
 
-    {% endif %}
+        <div class="card questions-card">
 
-    <br>
-    <a href="/admin">Back to Admin Dashboard</a>
+            <!-- Header -->
+            <div class="question-list-header">
+
+                <div class="question-list-icon">
+                    📚
+                </div>
+
+                <span class="role-badge">
+                    ADMIN / TEACHER
+                </span>
+
+                <h1>
+                    All Quiz Questions
+                </h1>
+
+                <p class="subtitle">
+                    View, edit and manage all questions in your quiz.
+                </p>
+
+            </div>
+
+
+            {% if questions %}
+
+                <div class="questions-list">
+
+                    {% for q in questions %}
+
+                        <div class="question-item">
+
+                            <!-- Question Header -->
+                            <div class="question-title">
+
+                                <span class="question-number">
+                                    Q{{ loop.index }}
+                                </span>
+
+                                <h2>
+                                    {{ q.question }}
+                                </h2>
+
+                            </div>
+
+
+                            <!-- Options -->
+                            <div class="options-container">
+
+                                <div class="view-option">
+                                    <span>A</span>
+                                    <p>{{ q.option_a }}</p>
+                                </div>
+
+                                <div class="view-option">
+                                    <span>B</span>
+                                    <p>{{ q.option_b }}</p>
+                                </div>
+
+                                <div class="view-option">
+                                    <span>C</span>
+                                    <p>{{ q.option_c }}</p>
+                                </div>
+
+                                <div class="view-option">
+                                    <span>D</span>
+                                    <p>{{ q.option_d }}</p>
+                                </div>
+
+                            </div>
+
+
+                            <!-- Question Details -->
+                            <div class="question-details">
+
+                                <div class="correct-answer">
+                                    ✅ Correct Answer:
+                                    <strong>
+                                        {{ q.correct_answer }}
+                                    </strong>
+                                </div>
+
+                               
+                           <!-- Actions -->
+<div class="question-actions">
+
+    <a href="/edit_question/{{ q.id }}"
+       class="btn">
+        ✏️ Edit Question
+    </a>
+
+    <form method="POST"
+          action="/delete_question/{{ q.id }}"
+          style="display:inline;">
+
+        <button type="submit"
+                class="btn delete-btn"
+                onclick="return confirm('Are you sure you want to delete this question?');">
+
+            🗑️ Delete Question
+
+        </button>
+
+    </form>
+
+</div>
+
+</div> <!-- question-details -->
+
+</div> <!-- question-item -->
+                        
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %} 
+
+                <!-- Empty State -->
+                <div class="empty-results">
+
+                    <div class="empty-icon">
+                        📝
+                    </div>
+
+                    <h2>
+                        No Questions Available
+                    </h2>
+
+                    <p>
+                        Start creating questions to build your quiz.
+                    </p>
+
+                    <a href="/add_question" class="btn">
+                        ➕ Add First Question
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Bottom Actions -->
+            <div class="question-footer">
+
+                <a href="/admin" class="btn">
+                    ⬅️ Back to Admin Dashboard
+                </a>
+
+                <a href="/add_question" class="btn">
+                    ➕ Add New Question
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </body>
+
 </html>

@@ -1,48 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Quiz Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz Result | QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-<nav class="navbar">
-    <a href="/">Home</a>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/result_history">My Results</a>
-    <a href="/logout">Logout</a>
-</nav>
+    <!-- Navigation -->
+    <nav class="navbar">
 
-<div class="container">
-    <div class="card result-card">
-
-        <h1>🎯 Quiz Result</h1>
-
-        <div class="result-box">
-            <h2>Your Score</h2>
-
-            <div class="score">
-                {{ score }} / {{ total }}
-            </div>
-
-            {% if score == total %}
-                <p class="result-message">Excellent! 🎉</p>
-            {% elif score >= total / 2 %}
-                <p class="result-message">Good Job! 👍</p>
-            {% else %}
-                <p class="result-message">Keep Practicing! 💪</p>
-            {% endif %}
+        <div>
+            <a href="/">🏠 Home</a>
+            <a href="/dashboard">📊 Dashboard</a>
+            <a href="/result_history">📋 My Results</a>
         </div>
 
-        <div class="result-actions">
-            <a href="/quiz" class="btn">🔄 Try Again</a>
-            <a href="/result_history" class="btn">📊 Result History</a>
-            <a href="/dashboard" class="btn">🏠 Dashboard</a>
+        <a href="/logout">
+            🚪 Logout
+        </a>
+
+    </nav>
+
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <div class="card result-card">
+
+            <!-- Result Header -->
+            <div class="result-header">
+
+                <div class="result-icon">
+                    🏆
+                </div>
+
+                <span class="role-badge">
+                    QUIZ COMPLETED
+                </span>
+
+                <h1>
+                    Quiz Result
+                </h1>
+
+                <p class="subtitle">
+                    Here is your performance summary.
+                </p>
+
+            </div>
+
+
+            <!-- Score -->
+            <div class="result-box">
+
+                <h2>
+                    Your Score
+                </h2>
+
+                <div class="score">
+                    {{ score }} / {{ total }}
+                </div>
+
+
+                {% if score == total %}
+
+                    <p class="result-message">
+                        Excellent! 🎉
+                    </p>
+
+                    <p>
+                        Perfect score! You answered every question correctly.
+                    </p>
+
+                {% elif score >= total / 2 %}
+
+                    <p class="result-message">
+                        Good Job! 👍
+                    </p>
+
+                    <p>
+                        Nice work! Keep improving your knowledge.
+                    </p>
+
+                {% else %}
+
+                    <p class="result-message">
+                        Keep Practicing! 💪
+                    </p>
+
+                    <p>
+                        Don't give up. Practice more and try again!
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Actions -->
+            <div class="result-actions">
+
+                <a href="/quiz" class="btn">
+                    🔄 Try Again
+                </a>
+
+                <a href="/result_history" class="btn">
+                    📊 Result History
+                </a>
+
+                <a href="/dashboard" class="btn">
+                    🏠 Dashboard
+                </a>
+
+            </div>
+
+
+            <!-- Footer Message -->
+            <div class="result-footer">
+
+                <span>
+                    🚀 Keep learning. Keep improving.
+                </span>
+
+            </div>
+
         </div>
 
     </div>
-</div>
 
 </body>
+
 </html>

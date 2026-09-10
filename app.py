@@ -1,10 +1,133 @@
 from flask import Flask, render_template, request, redirect, session
 from database import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
+import smtplib
 
 app = Flask(__name__)
 app.secret_key = "quiz_secret_key"
 
+def send_admin_request(name, email, phone, user_id):
+    sender_email = os.environ.get("EMAIL_ADDRESS")
+    sender_password = os.environ.get("EMAIL_PASSWORD")
+    receiver_email = os.environ.get("ADMIN_EMAIL")
+
+    base_url = "https://online-quiz-management-system-1mqm.onrender.com"    
+
+    approve_url = f"{base_url}/admin/approve/{user_id}"
+    reject_url = f"{base_url}/admin/reject/{user_id}"
+
+    subject = "New Admin Approval Request"
+
+    html_message = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif;">
+
+        <h2>New Admin Registration Request</h2>
+
+        <p><b>Name:</b> {name}</p>
+        <p><b>Email:</b> {email}</p>
+        <p><b>Phone:</b> {phone}</p>
+
+        <br>
+
+        <a href="{approve_url}"
+           style="background-color:#28a745;
+                  color:white;
+                  padding:12px 20px;
+                  text-decoration:none;
+                  border-radius:6px;
+                  display:inline-block;">
+            Approve Admin
+        </a>
+
+        &nbsp;&nbsp;
+
+        <a href="{reject_url}"
+           style="background-color:#dc3545;
+                  color:white;
+                  padding:12px 20px;
+                  text-decoration:none;
+                  border-radius:6px;
+                  display:inline-block;">
+            Reject Admin
+        </a>
+
+        <br><br>
+
+        <p>Please click the appropriate button to approve or reject this admin request.</p>
+
+    </body>
+    </html>
+    """
+    print("EMAIL_ADDRESS:", sender_email)
+    print("EMAIL_PASSWORD SET:", bool(sender_password))
+    print("ADMIN_EMAIL:", receiver_email)
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+
+            email_message = f"""\
+Subject: {subject}
+From: {sender_email}
+To: {receiver_email}
+MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
+
+{html_message}
+"""
+
+            server.sendmail(
+                sender_email,
+                receiver_email,
+                email_message
+            )
+
+        return True
+
+    except Exception as e:
+        print("Email sending failed:", e)
+        return False
+
+@app.route("/admin/resend-request/<int:user_id>")
+def resend_admin_request(user_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id, name, email, phone, admin_status "
+        "FROM users WHERE id = %s AND role = 'admin'",
+        (user_id,)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if not user:
+        return "Admin user not found!"
+
+    if user["admin_status"] != "pending":
+        return "This admin request is not pending."
+
+    send_admin_request(
+        user["name"],
+        user["email"],
+        user["phone"],
+        user["id"]
+    )
+
+    return "Approval email sent. Check PowerShell for email status."
 
 @app.route("/")
 def home():
@@ -19,6 +142,7 @@ def register():
         email = request.form["email"]
         phone = request.form["phone"]
         password = request.form["password"]
+        role = request.form["role"]
 
         hashed_password = generate_password_hash(password)
 
@@ -26,14 +150,30 @@ def register():
         cursor = db.cursor()
 
         try:
+            if role == "admin":
+                admin_status = "pending"
+            else:
+                admin_status = "approved"
+
             cursor.execute(
-                "INSERT INTO users (name, email, phone, password, role) VALUES (%s, %s, %s, %s, %s)",
-                (name, email, phone, hashed_password, "student")
+                "INSERT INTO users (name, email, phone, password, role, admin_status) "
+                "VALUES (%s, %s, %s, %s, %s, %s)",
+                (name, email, phone, hashed_password, role, admin_status)
             )
+
             db.commit()
+
+            # Get newly created user's ID
+            user_id = cursor.lastrowid
+
+            # Send approval request only for Admin
+            if role == "admin":
+                send_admin_request(name, email, phone, user_id)
+
             return redirect("/login")
 
-        except Exception:
+        except Exception as e:
+            print("Registration error:", e)
             return "Email already registered!"
 
         finally:
@@ -52,7 +192,7 @@ def login():
 
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
- 
+
         cursor.execute(
             "SELECT * FROM users WHERE email = %s",
             (email,)
@@ -64,6 +204,10 @@ def login():
         db.close()
 
         if user and check_password_hash(user["password"], password):
+
+            # Admin approval check
+            if user["role"] == "admin" and user["admin_status"] != "approved":
+                return "Your admin request is still pending approval."
 
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
@@ -79,6 +223,44 @@ def login():
 
     return render_template("login.html")
 
+# ADMIN DASHBOARD
+@app.route("/admin")
+def admin():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    return render_template(
+        "admin.html",
+        name=session["user_name"]
+    )
+@app.route("/admin/set-quiz-time", methods=["POST"])
+def set_quiz_time():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("role") != "admin":
+        return redirect("/dashboard")
+
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute(
+        "UPDATE quiz_settings SET quiz_time = %s WHERE id = 1",
+        (quiz_time,)
+    )
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return redirect("/admin")
+
 
 # STUDENT DASHBOARD
 @app.route("/dashboard")
@@ -93,21 +275,203 @@ def dashboard():
         "dashboard.html",
         name=session["user_name"]
     )
+@app.route("/profile")
+def profile():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM users WHERE id = %s",
+        (session["user_id"],)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return render_template("profile.html", user=user)
 
 
-# ADMIN DASHBOARD
-@app.route("/admin")
-def admin():
+@app.route("/edit_profile", methods=["GET", "POST"])
+def edit_profile():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        phone = request.form["phone"]
+        bio = request.form["bio"]
+
+        profile_pic = request.files.get("profile_pic")
+
+        filename = None
+
+        if profile_pic and profile_pic.filename:
+            filename = secure_filename(profile_pic.filename)
+
+            upload_folder = os.path.join(
+                app.root_path,
+                "static",
+                "uploads"
+            )
+
+            os.makedirs(upload_folder, exist_ok=True)
+
+            profile_pic.save(
+                os.path.join(upload_folder, filename)
+            )
+
+        if filename:
+
+            cursor.execute(
+                """
+                UPDATE users
+                SET name = %s,
+                    phone = %s,
+                    bio = %s,
+                    profile_pic = %s
+                WHERE id = %s
+                """,
+                (
+                    name,
+                    phone,
+                    bio,
+                    filename,
+                    session["user_id"]
+                )
+            )
+
+        else:
+
+            cursor.execute(
+                """
+                UPDATE users
+                SET name = %s,
+                    phone = %s,
+                    bio = %s
+                WHERE id = %s
+                """,
+                (
+                    name,
+                    phone,
+                    bio,
+                    session["user_id"]
+                )
+            )
+
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        session["user_name"] = name
+
+        return redirect("/profile")
+
+    cursor.execute(
+        "SELECT * FROM users WHERE id = %s",
+        (session["user_id"],)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "edit_profile.html",
+        user=user
+    )
+
+# ADMIN APPROVAL REQUESTS
+@app.route("/admin/requests")
+def admin_requests():
     if "user_id" not in session:
         return redirect("/login")
 
     if session["role"] != "admin":
         return redirect("/dashboard")
 
-    return render_template(
-        "admin.html",
-        name=session["user_name"]
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id, name, email, phone "
+        "FROM users "
+        "WHERE role = 'admin' AND admin_status = 'pending' "
+        "ORDER BY id DESC"
     )
+
+    requests = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_requests.html",
+        requests=requests
+    )
+
+@app.route("/admin/approve/<int:user_id>")
+def approve_admin(user_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+    if session.get("user_id") != 2:
+        return "Only main admin can approve requests!"
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute(
+        "UPDATE users SET admin_status = 'approved' "
+        "WHERE id = %s AND role = 'admin'",
+        (user_id,)
+    )
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return redirect("/admin/requests")
+
+@app.route("/admin/reject/<int:user_id>")
+def reject_admin(user_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    if session.get("user_id") != 2:
+        return "Only main admin can reject requests!"
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute(
+        "UPDATE users SET admin_status = 'rejected' "
+        "WHERE id = %s AND role = 'admin'",
+        (user_id,)
+    )
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return redirect("/admin/requests")
 
 #ADD QUESTION
 @app.route("/add_question", methods=["GET", "POST"])
@@ -130,14 +494,14 @@ def add_question():
             INSERT INTO questions
             (question, option_a, option_b, option_c, option_d, correct_answer)
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (
-            question,
-            option_a,
-            option_b,
-            option_c,
-            option_d,
-            correct_answer
-        ))
+""", (
+    question,
+    option_a,
+    option_b,
+    option_c,
+    option_d,
+    correct_answer
+))
 
         db.commit()
         cursor.close()
@@ -281,6 +645,7 @@ def save_answer():
 
     return {"success": True}
 
+
 # QUIZ
 @app.route("/quiz", methods=["GET", "POST"])
 def quiz():
@@ -303,6 +668,10 @@ def quiz():
     # Get all questions
     cursor.execute("SELECT * FROM questions")
     questions = cursor.fetchall()
+    cursor.execute("SELECT quiz_time FROM quiz_settings WHERE id = 1")
+    quiz_setting = cursor.fetchone()
+
+    quiz_time = quiz_setting["quiz_time"] if quiz_setting else 10
 
     # SUBMIT QUIZ
     if request.method == "POST":
@@ -347,7 +716,8 @@ def quiz():
 
     return render_template(
         "quiz.html",
-        questions=questions
+        questions=questions,
+        quiz_time=quiz_time
     )
 
 # ADMIN - VIEW STUDENT RESULTS

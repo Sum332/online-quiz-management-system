@@ -1,50 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Admin Dashboard | QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
+    <!-- Navigation -->
     <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/admin">Admin Dashboard</a>
-        <a href="/add_question">Add Questions</a>
-        <a href="/view_questions">View Questions</a>
-        <a href="/logout">Logout</a>
+
+        <div class="nav-left">
+
+            <a href="/">
+                🏠 Home
+            </a>
+
+            <a href="/admin">
+                📊 Admin Dashboard
+            </a>
+
+            <a href="/add_question">
+                ➕ Add Questions
+            </a>
+
+            <a href="/view_questions">
+                📋 Questions
+            </a>
+
+        </div>
+
+        <a href="/logout" class="profile-btn">
+            🚪 Logout
+        </a>
+
     </nav>
 
+
+    <!-- Main Dashboard -->
     <div class="container">
 
         <div class="card dashboard-card">
 
-            <h1>Welcome, Admin! 👋</h1>
 
-            <h2>Admin Dashboard</h2>
+            <!-- Header -->
+            <div class="admin-header">
 
-            <p class="subtitle">
-                Manage quiz questions and monitor the quiz system.
-            </p>
+                <div class="admin-icon">
+                    👨‍🏫
+                </div>
 
+                <div>
+
+                    <span class="role-badge">
+                        ADMIN / TEACHER
+                    </span>
+
+                    <h1>
+                        Welcome, Admin! 👋
+                    </h1>
+
+                    <p class="subtitle">
+                        Manage your quizzes, questions and students
+                        from one place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Dashboard Cards -->
             <div class="dashboard-buttons">
 
-                <a href="/add_question" class="btn">
-                    ➕ Add Questions
+                <a href="/add_question" class="btn admin-action">
+
+                    <span class="action-icon">
+                        ➕
+                    </span>
+
+                    <span>
+                        <strong>Add Questions</strong>
+                        <small>Create new quiz questions</small>
+                    </span>
+
                 </a>
 
-                <a href="/view_questions" class="btn">
-                    📋 View Questions
-                </a>
-                <a href="/admin_results" class="btn">
-                    📊 View Student Results
+
+                <a href="/view_questions" class="btn admin-action">
+
+                    <span class="action-icon">
+                        📋
+                    </span>
+
+                    <span>
+                        <strong>View Questions</strong>
+                        <small>Manage existing questions</small>
+                    </span>
+
                 </a>
 
-                <a href="/logout" class="btn logout-btn">
+
+                <a href="/admin_results" class="btn admin-action">
+
+                    <span class="action-icon">
+                        📊
+                    </span>
+
+                    <span>
+                        <strong>Student Results</strong>
+                        <small>Monitor student performance</small>
+                    </span>
+
+                </a>
+
+
+            <!-- Quiz Timer -->
+            <div class="card admin-setting-card">
+
+                <div class="setting-header">
+
+                    <div class="setting-icon">
+                        ⏱️
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Quiz Time Control
+                        </h2>
+
+                        <p class="subtitle">
+                            Set the time limit for the entire quiz.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form action="/admin/set-quiz-time"
+                      method="POST"
+                      class="timer-form">
+
+                    <label for="quiz_time">
+                        Choose Quiz Duration
+                    </label>
+
+                    <select name="quiz_time"
+                            id="quiz_time"
+                            required>
+
+                        <option value="">
+                            Select Quiz Time
+                        </option>
+
+                        <option value="5">
+                            5 Minutes
+                        </option>
+
+                        <option value="10">
+                            10 Minutes
+                        </option>
+
+                        <option value="15">
+                            15 Minutes
+                        </option>
+
+                        <option value="20">
+                            20 Minutes
+                        </option>
+
+                        <option value="30">
+                            30 Minutes
+                        </option>
+
+                    </select>
+
+                    <button type="submit" class="btn">
+                        💾 Save Quiz Time
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- Admin Information -->
+            <div class="admin-info">
+
+                <div class="info-item">
+                    <span>🎯</span>
+                    <div>
+                        <strong>Quiz Management</strong>
+                        <small>Create and manage questions</small>
+                    </div>
+                </div>
+
+
+                <div class="info-item">
+                    <span>👨‍🎓</span>
+                    <div>
+                        <strong>Student Monitoring</strong>
+                        <small>Check student quiz performance</small>
+                    </div>
+                </div>
+
+
+            <!-- Logout -->
+            <div class="dashboard-buttons">
+
+                <a href="/logout"
+                   class="btn logout-btn">
+
                     🚪 Logout
+
                 </a>
 
             </div>
@@ -54,4 +230,5 @@
     </div>
 
 </body>
+
 </html>

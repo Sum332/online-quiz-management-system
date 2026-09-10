@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav class="navbar">
+
+    <div class="nav-left">
+
+        <a href="/">
+            🏠 Home
+        </a>
+
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
+
+        <a href="/quiz">
+            🧠 Start Quiz
+        </a>
+
+        <a href="/result_history">
+            🏆 My Results
+        </a>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <a href="/profile" class="active">
+            👤 Profile
+        </a>
+
+        <a href="/logout">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================
+     PROFILE
+========================= -->
+
+<div class="container">
+
+    <div class="card profile-card">
+
+
+        <!-- PROFILE HEADER -->
+
+        <div class="profile-header">
+
+            <div class="profile-title">
+
+                <div class="profile-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <span class="role-badge">
+                        QUIZMASTER PROFILE
+                    </span>
+
+                    <h1>
+                        My Profile
+                    </h1>
+
+                    <p>
+                        Manage your personal information and profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PROFILE BODY -->
+
+        <div class="profile-section">
+
+
+            <!-- PROFILE IMAGE -->
+
+            <div class="profile-image-wrapper">
+
+                {% if user.profile_pic %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}"
+                        alt="Profile Picture"
+                        class="profile-pic"
+                    >
+
+                {% else %}
+
+                    <div class="default-avatar">
+                        👤
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- NAME -->
+
+            <h2 class="profile-name">
+                {{ user.name }}
+            </h2>
+
+
+
+            <!-- ROLE -->
+
+            {% if user.role == "admin" %}
+
+                <span class="profile-role admin-role">
+                    👨‍🏫 Admin / Teacher
+                </span>
+
+            {% else %}
+
+                <span class="profile-role student-role">
+                    🎓 Student
+                </span>
+
+            {% endif %}
+
+
+
+            <!-- INFORMATION -->
+
+            <div class="profile-info">
+
+
+                <!-- EMAIL -->
+
+                <div class="profile-info-item">
+
+                    <span class="info-icon">
+                        📧
+                    </span>
+
+                    <div>
+
+                        <small>
+                            Email Address
+                        </small>
+
+                        <p>
+                            {{ user.email }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PHONE -->
+
+                <div class="profile-info-item">
+
+                    <span class="info-icon">
+                        📱
+                    </span>
+
+                    <div>
+
+                        <small>
+                            Phone Number
+                        </small>
+
+                        <p>
+                            {{ user.phone or "Not added" }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BIO -->
+
+                <div class="profile-info-item">
+
+                    <span class="info-icon">
+                        📝
+                    </span>
+
+                    <div>
+
+                        <small>
+                            About Me
+                        </small>
+
+                        <p>
+                            {{ user.bio or "No bio added yet." }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ACTION BUTTONS -->
+
+            <div class="profile-actions">
+
+                <a href="/edit_profile"
+                   class="btn profile-edit-btn">
+
+                    ✏️ Edit Profile
+
+                </a>
+
+
+                <a href="/dashboard"
+                   class="btn profile-back-btn">
+
+                    ← Back to Dashboard
+
+                </a>
+
+            </div>
+
+
+
+            <!-- PROFILE FOOTER -->
+
+            <div class="motivation-box">
+
+                <span>
+                    🚀
+                </span>
+
+                <div>
+
+                    <strong>
+                        Keep Learning, Keep Growing!
+                    </strong>
+
+                    <p>
+                        Your QuizMaster profile keeps your
+                        learning journey organized.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

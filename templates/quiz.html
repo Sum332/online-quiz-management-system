@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>Quiz - Online Quiz Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -15,6 +17,7 @@
 </nav>
 
 <div class="container">
+
     <div class="card quiz-card">
 
         <h1>📝 Online Quiz</h1>
@@ -23,11 +26,13 @@
             Choose the correct answer for each question.
         </p>
 
+        <!-- TIMER -->
         <div class="quiz-timer">
             ⏱️ Time Remaining:
-            <span id="timer">10:00</span>
+            <span id="timer">Loading...</span>
         </div>
 
+        <!-- QUIZ FORM -->
         <form method="POST" id="quizForm">
 
             {% for question in questions %}
@@ -42,7 +47,9 @@
                     {{ question.question }}
                 </p>
 
+                <!-- OPTION A -->
                 <label class="option">
+
                     <input
                         type="radio"
                         name="q{{ question.id }}"
@@ -50,43 +57,66 @@
                         data-question-id="{{ question.id }}"
                         required
                     >
-                    <span>A. {{ question.option_a }}</span>
+
+                    <span>
+                        A. {{ question.option_a }}
+                    </span>
+
                 </label>
 
+                <!-- OPTION B -->
                 <label class="option">
+
                     <input
                         type="radio"
                         name="q{{ question.id }}"
                         value="B"
                         data-question-id="{{ question.id }}"
                     >
-                    <span>B. {{ question.option_b }}</span>
+
+                    <span>
+                        B. {{ question.option_b }}
+                    </span>
+
                 </label>
 
+                <!-- OPTION C -->
                 <label class="option">
+
                     <input
                         type="radio"
                         name="q{{ question.id }}"
                         value="C"
                         data-question-id="{{ question.id }}"
                     >
-                    <span>C. {{ question.option_c }}</span>
+
+                    <span>
+                        C. {{ question.option_c }}
+                    </span>
+
                 </label>
 
+                <!-- OPTION D -->
                 <label class="option">
+
                     <input
                         type="radio"
                         name="q{{ question.id }}"
                         value="D"
                         data-question-id="{{ question.id }}"
                     >
-                    <span>D. {{ question.option_d }}</span>
+
+                    <span>
+                        D. {{ question.option_d }}
+                    </span>
+
                 </label>
 
             </div>
 
             {% endfor %}
 
+            <!-- SUBMIT BUTTON -->
             <button type="submit" class="submit-btn">
                 Submit Quiz
             </button>
@@ -94,16 +124,18 @@
         </form>
 
     </div>
+
 </div>
 
 
+<!-- =========================
+     ADMIN SET TIMER
+========================= -->
+
 <script>
 
-    // =========================
-    // TIMER
-    // =========================
-
-    let timeLeft = 10 * 60;
+    // Admin dashboard in quiz time
+    let timeLeft = parseInt("{{ quiz_time }}") * 60;
 
     const timer = document.getElementById("timer");
     const quizForm = document.getElementById("quizForm");
@@ -113,10 +145,14 @@
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
 
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+        seconds = seconds < 10
+            ? "0" + seconds
+            : seconds;
 
         timer.textContent = minutes + ":" + seconds;
 
+
+        // Time End
         if (timeLeft <= 0) {
 
             clearInterval(countdown);
@@ -124,13 +160,14 @@
             timer.textContent = "Time Up!";
 
             quizForm.submit();
+
+            return;
         }
 
         timeLeft--;
 
     }, 1000);
-
-
+    
 </script>
 
 </body>

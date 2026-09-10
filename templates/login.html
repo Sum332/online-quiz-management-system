@@ -1,48 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login - Online Quiz Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
 <nav class="navbar">
+    <a href="/">QuizMaster</a>
     <a href="/">Home</a>
     <a href="/login">Login</a>
     <a href="/register">Register</a>
 </nav>
 
 <div class="container">
-    <div class="card">
 
-        <h1>Login</h1>
+    <div class="card center">
+
+        <div style="font-size: 55px; margin-bottom: 10px;">
+            🎓
+        </div>
+
+        <h1>Welcome Back!</h1>
+
+        <p style="color:#64748b; margin-bottom:30px;">
+            Login to continue your quiz journey
+        </p>
 
         <form method="POST">
 
             <label>Email Address</label>
-            <input type="email"
-                   name="email"
-                   placeholder="Enter your email"
-                   required>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
 
             <label>Password</label>
-            <input type="password"
-                   name="password"
-                   placeholder="Enter your password"
-                   required>
 
-            <button type="submit">Login</button>
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="submit">
+                Login to QuizMaster
+            </button>
 
         </form>
 
-        <p>
+        <p style="margin-top:25px;">
             Don't have an account?
-            <a href="/register">Register here</a>
+            <a href="/register">Create Account</a>
         </p>
 
-        <a href="/">Back to Home</a>
+        <p>
+            <a href="/">← Back to Home</a>
+        </p>
 
     </div>
+
 </div>
 
 </body>

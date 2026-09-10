@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Add Question</title>
+    <title>Add Question | QuizMaster</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
@@ -12,80 +13,241 @@
 
 <body>
 
-    <nav class="navbar">
-        <a href="/admin">Admin Dashboard</a>
-        <a href="/add_question">Add Questions</a>
-        <a href="/view_questions">View Questions</a>
-        <a href="/logout">Logout</a>
+    <!-- Navigation -->
+    <nav class="nav">
+
+        <div class="nav-left">
+
+            <a href="/admin">
+                📊 Admin Dashboard
+            </a>
+
+            <a href="/add_question">
+                ➕ Add Questions
+            </a>
+
+            <a href="/view_questions">
+                📋 View Questions
+            </a>
+
+        </div>
+
+        <a href="/logout" class="profile-btn">
+            🚪 Logout
+        </a>
+
     </nav>
 
+
+    <!-- Main Content -->
     <div class="container">
 
-        <div class="card">
+        <div class="card add-question-card">
 
-            <h1>➕ Add Quiz Question</h1>
 
-            <form method="POST">
+            <!-- Header -->
+            <div class="question-header">
 
-                <label>Question</label>
-                <textarea
-                    name="question"
-                    placeholder="Enter your question"
-                    rows="4"
-                    required></textarea>
+                <div class="question-icon">
+                    🧠
+                </div>
 
-                <label>Option A</label>
-                <input
-                    type="text"
-                    name="option_a"
-                    placeholder="Enter option A"
-                    required>
+                <span class="role-badge">
+                    ADMIN / TEACHER
+                </span>
 
-                <label>Option B</label>
-                <input
-                    type="text"
-                    name="option_b"
-                    placeholder="Enter option B"
-                    required>
+                <h1>
+                    Create Quiz Question
+                </h1>
 
-                <label>Option C</label>
-                <input
-                    type="text"
-                    name="option_c"
-                    placeholder="Enter option C"
-                    required>
+                <p class="subtitle">
+                    Add a new question to your quiz and choose
+                    the correct answer.
+                </p>
 
-                <label>Option D</label>
-                <input
-                    type="text"
-                    name="option_d"
-                    placeholder="Enter option D"
-                    required>
+            </div>
 
-                <label>Correct Answer</label>
-                <select name="correct_answer" required>
-                    <option value="">Select Correct Answer</option>
-                    <option value="A">Option A</option>
-                    <option value="B">Option B</option>
-                    <option value="C">Option C</option>
-                    <option value="D">Option D</option>
-                </select>
 
-                <button type="submit" class="btn">
-                    ➕ Add Question
-                </button>
+            <!-- Question Form -->
+            <form method="POST"
+                  class="question-form">
 
-            </form>
 
-            <br>
+                <!-- Question -->
+                <div class="form-group">
 
-            <a href="/admin" class="btn">
-                ⬅️ Back to Admin Dashboard
-            </a>
+                    <label for="question">
+                        📝 Question
+                    </label>
+
+                    <textarea
+                        id="question"
+                        name="question"
+                        placeholder="Enter your quiz question here..."
+                        rows="5"
+                        required></textarea>
+
+                </div>
+
+
+                <!-- Options -->
+                <div class="options-title">
+
+                    <h2>
+                        🎯 Answer Options
+                    </h2>
+
+                    <p>
+                        Enter four possible answers.
+                    </p>
+
+                </div>
+
+
+                <div class="option-grid">
+
+
+                    <!-- Option A -->
+                    <div class="form-group">
+
+                        <label for="option_a">
+                            🔵 Option A
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option_a"
+                            name="option_a"
+                            placeholder="Enter option A"
+                            required>
+
+                    </div>
+
+
+                    <!-- Option B -->
+                    <div class="form-group">
+
+                        <label for="option_b">
+                            🟣 Option B
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option_b"
+                            name="option_b"
+                            placeholder="Enter option B"
+                            required>
+
+                    </div>
+
+
+                    <!-- Option C -->
+                    <div class="form-group">
+
+                        <label for="option_c">
+                            🟢 Option C
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option_c"
+                            name="option_c"
+                            placeholder="Enter option C"
+                            required>
+
+                    </div>
+
+
+                    <!-- Option D -->
+                    <div class="form-group">
+
+                        <label for="option_d">
+                            🟠 Option D
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option_d"
+                            name="option_d"
+                            placeholder="Enter option D"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Correct Answer -->
+                <div class="form-group">
+
+                    <label for="correct_answer">
+                        ✅ Correct Answer
+                    </label>
+
+                    <select
+                        id="correct_answer"
+                        name="correct_answer"
+                        required>
+
+                        <option value="">
+                            Select Correct Answer
+                        </option>
+
+                        <option value="A">
+                            Option A
+                        </option>
+
+                        <option value="B">
+                            Option B
+                        </option>
+
+                        <option value="C">
+                            Option C
+                        </option>
+
+                        <option value="D">
+                            Option D
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            <!-- Back -->
+            <div class="question-footer">
+
+                <a href="/admin"
+                   class="btn">
+
+                    ⬅️ Back to Admin Dashboard
+
+                </a>
+
+                <a href="/view_questions"
+                   class="btn">
+
+                    📋 View All Questions
+
+                </a>
+
+            </div>
+
+
+            <!-- Tip -->
+            <div class="admin-info">
+
+                💡 <strong>Teacher Tip:</strong>
+                Make your questions clear and keep only one
+                correct answer for each question.
+
+            </div>
+
 
         </div>
 
     </div>
 
 </body>
+
 </html>

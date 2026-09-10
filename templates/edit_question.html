@@ -1,120 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Edit Question</title>
+    <title>Edit Question | QuizMaster</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    
+
+    <!-- Navigation -->
     <nav class="nav">
-        <a href="/admin">Admin Dashboard</a>
-        <a href="/add_question">Add Question</a>
-        <a href="/view_questions">View Questions</a>
-        <a href="/logout">Logout</a>
+
+        <div class="nav-left">
+
+            <a href="/admin">
+                📊 Admin Dashboard
+            </a>
+
+            <a href="/add_question">
+                ➕ Add Questions
+            </a>
+
+            <a href="/view_questions">
+                📋 View Questions
+            </a>
+
+        </div>
+
+        <a href="/logout" class="profile-btn">
+            🚪 Logout
+        </a>
+
     </nav>
 
+
+    <!-- Main Content -->
     <div class="container">
 
-        <div class="card">
+        <div class="card edit-question-card">
 
-            <h1>✏️ Edit Quiz Question</h1>
+            <!-- Header -->
+            <div class="question-list-header">
 
-            <form method="POST">
+                <div class="question-list-icon">
+                    ✏️
+                </div>
 
-                <label>Question:</label>
+                <span class="role-badge">
+                    ADMIN / TEACHER
+                </span>
 
-                <textarea name="question" required>{{ question.question }}</textarea>
+                <h1>
+                    Edit Quiz Question
+                </h1>
 
+                <p class="subtitle">
+                    Update the question, options and correct answer.
+                </p>
 
-                <label>Option A:</label>
-
-                <input
-                    type="text"
-                    name="option_a"
-                    value="{{ question.option_a }}"
-                    required
-                >
-
-
-                <label>Option B:</label>
-
-                <input
-                    type="text"
-                    name="option_b"
-                    value="{{ question.option_b }}"
-                    required
-                >
+            </div>
 
 
-                <label>Option C:</label>
+            <!-- Edit Form -->
+            <form method="POST" class="question-form">
 
-                <input
-                    type="text"
-                    name="option_c"
-                    value="{{ question.option_c }}"
-                    required
-                >
+                <!-- Question -->
+                <div class="form-group">
 
+                    <label for="question">
+                        📝 Question
+                    </label>
 
-                <label>Option D:</label>
+                    <textarea
+                        id="question"
+                        name="question"
+                        rows="4"
+                        required>{{ question.question }}</textarea>
 
-                <input
-                    type="text"
-                    name="option_d"
-                    value="{{ question.option_d }}"
-                    required
-                >
-
-
-                <label>Correct Answer:</label>
-
-                <select name="correct_answer" required>
-
-                    <option value="">Select Correct Answer</option>
-
-                    <option value="A"
-                        {% if question.correct_answer == "A" %}selected{% endif %}>
-                        Option A
-                    </option>
-
-                    <option value="B"
-                        {% if question.correct_answer == "B" %}selected{% endif %}>
-                        Option B
-                    </option>
-
-                    <option value="C"
-                        {% if question.correct_answer == "C" %}selected{% endif %}>
-                        Option C
-                    </option>
-
-                    <option value="D"
-                        {% if question.correct_answer == "D" %}selected{% endif %}>
-                        Option D
-                    </option>
-
-                </select>
+                </div>
 
 
-                <button type="submit">
-                    ✏️ Update Question
-                </button>
+                <!-- Option A -->
+                <div class="form-group">
+
+                    <label for="option_a">
+                        🅰️ Option A
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_a"
+                        name="option_a"
+                        value="{{ question.option_a }}"
+                        required>
+
+                </div>
+
+
+                <!-- Option B -->
+                <div class="form-group">
+
+                    <label for="option_b">
+                        🅱️ Option B
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_b"
+                        name="option_b"
+                        value="{{ question.option_b }}"
+                        required>
+
+                </div>
+
+
+                <!-- Option C -->
+                <div class="form-group">
+
+                    <label for="option_c">
+                        ©️ Option C
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_c"
+                        name="option_c"
+                        value="{{ question.option_c }}"
+                        required>
+
+                </div>
+
+
+                <!-- Option D -->
+                <div class="form-group">
+
+                    <label for="option_d">
+                        🆎 Option D
+                    </label>
+
+                    <input
+                        type="text"
+                        id="option_d"
+                        name="option_d"
+                        value="{{ question.option_d }}"
+                        required>
+
+                </div>
+
+
+                <!-- Correct Answer -->
+                <div class="form-group">
+
+                    <label for="correct_answer">
+                        ✅ Correct Answer
+                    </label>
+
+                    <select
+                        id="correct_answer"
+                        name="correct_answer"
+                        required>
+
+                        <option value="">
+                            Select Correct Answer
+                        </option>
+
+                        <option value="A"
+                            {% if question.correct_answer == "A" %}
+                                selected
+                            {% endif %}>
+                            Option A
+                        </option>
+
+                        <option value="B"
+                            {% if question.correct_answer == "B" %}
+                                selected
+                            {% endif %}>
+                            Option B
+                        </option>
+
+                        <option value="C"
+                            {% if question.correct_answer == "C" %}
+                                selected
+                            {% endif %}>
+                            Option C
+                        </option>
+
+                        <option value="D"
+                            {% if question.correct_answer == "D" %}
+                                selected
+                            {% endif %}>
+                            Option D
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="edit-question-actions">
+
+                    <button type="submit" class="btn">
+                        💾 Update Question
+                    </button>
+
+                    <a href="/view_questions" class="btn secondary-btn">
+                        ⬅️ Back to Questions
+                    </a>
+
+                </div>
 
             </form>
-
-            <br>
-
-            <a href="/view_questions" class="btn">
-                ⬅️ Back to Questions
-            </a>
 
         </div>
 
     </div>
 
 </body>
+
 </html>

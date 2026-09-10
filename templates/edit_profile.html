@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Profile | QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+
+        <div class="nav-left">
+            <a href="/">🏠 Home</a>
+            <a href="/dashboard">📊 Dashboard</a>
+            <a href="/quiz">🧠 Quiz</a>
+            <a href="/result_history">🏆 My Results</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+
+        <a href="/profile" class="profile-btn">
+            👤 Profile
+        </a>
+
+    </nav>
+
+
+    <!-- Main Section -->
+    <div class="container">
+
+        <div class="card edit-profile-card">
+
+            <!-- Header -->
+            <div class="profile-header">
+
+                <div class="profile-icon">
+                    ✨
+                </div>
+
+                <h1>Edit Your Profile</h1>
+
+                <p>
+                    Update your personal information and make your
+                    QuizMaster profile yours.
+                </p>
+
+            </div>
+
+
+            <!-- Profile Form -->
+            <form method="POST"
+                  enctype="multipart/form-data"
+                  class="profile-form">
+
+
+                <!-- Name -->
+                <div class="form-group">
+
+                    <label for="name">
+                        👤 Full Name
+                    </label>
+
+                    <input type="text"
+                           id="name"
+                           name="name"
+                           value="{{ user.name }}"
+                           placeholder="Enter your name"
+                           required>
+
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+
+                    <label for="phone">
+                            📱 Phone Number
+                    </label>
+
+                     <input type="tel"
+                           id="phone"
+                           name="phone"
+                           value="{{ user.phone }}"
+                           placeholder="Enter your phone number">
+
+                </div>    
+                
+                <!-- Bio -->
+                <div class="form-group">
+
+                    <label for="bio">
+                        📝 About You
+                    </label>
+
+                    <textarea
+                        id="bio"
+                        name="bio"
+                        rows="5"
+                        placeholder="Write something about yourself...">{{ user.bio or "" }}</textarea>
+
+                    <small>
+                        Tell something interesting about yourself.
+                    </small>
+
+                </div>
+
+
+                <!-- Profile Picture -->
+                <div class="form-group">
+
+                    <label for="profile_pic">
+                        📸 Profile Picture
+                    </label>
+
+                    <div class="upload-box">
+
+                        <div class="upload-icon">
+                            🖼️
+                        </div>
+
+                        <div>
+                            <strong>Choose a profile picture</strong>
+
+                            <p>
+                                JPG, PNG or other image formats
+                            </p>
+                        </div>
+
+                        <input type="file"
+                               id="profile_pic"
+                               name="profile_pic"
+                               accept="image/*">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="profile-actions">
+
+                    <button type="submit" class="btn save-btn">
+                        💾 Save Changes
+                    </button>
+
+                    <a href="/profile" class="btn cancel-btn">
+                        ↩️ Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+
+            <!-- Bottom Info -->
+            <div class="profile-tip">
+
+                💡 <strong>Profile Tip:</strong>
+                Keep your profile information updated so your
+                QuizMaster experience feels more personal.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

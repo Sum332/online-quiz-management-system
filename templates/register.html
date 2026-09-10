@@ -3,69 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Register - QuizMaster</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-    </nav>
+<nav class="navbar">
+    <a href="/">QuizMaster</a>
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+</nav>
 
-    <div class="container">
+<div class="container">
 
-        <div class="card">
+    <div class="card">
 
-            <h1>Student Registration</h1>
+        <div class="center">
 
-            <form method="POST">
+            <div style="font-size: 55px; margin-bottom: 10px;">
+                🚀
+            </div>
 
-                <label>Full Name</label>
-                <input type="text"
-                       name="name"
-                       placeholder="Enter your full name"
-                       required>
+            <h1>Create Your Account</h1>
 
-                <label>Email Address</label>
-                <input type="email"
-                       name="email"
-                       placeholder="Enter your email"
-                       required>
+            <p style="color:#64748b; margin-bottom:30px;">
+                Join QuizMaster and start your learning journey
+            </p>
 
-                <label>Phone Number</label>
-                <input type="tel"
-                       name="phone"
-                       placeholder="Enter your phone number"
-                       required>
+        </div>
 
-                <label>Password</label>
-                <input type="password"
-                       name="password"
-                       placeholder="Create a password"
-                       required>
+        <form method="POST">
 
-                <button type="submit">Create Account</button>
+            <label>Full Name</label>
 
-            </form>
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your full name"
+                required
+            >
 
-            <br>
+            <label>Email Address</label>
 
-            <p class="center">
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+            >
+
+            <label>Phone Number</label>
+
+            <input
+                type="tel"
+                name="phone"
+                placeholder="Enter your phone number"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a secure password"
+                required
+            >
+
+            <label>Register As</label>
+
+            <select name="role" required>
+                <option value="">Select Role</option>
+                <option value="student">Student</option>
+                <option value="admin">Admin / Teacher</option>
+            </select>
+
+            <button type="submit" style="width:100%; margin-top:10px;">
+                Create My Account
+            </button>
+
+        </form>
+
+        <div class="center" style="margin-top:25px;">
+
+            <p>
                 Already have an account?
                 <a href="/login">Login here</a>
             </p>
 
-            <p class="center">
-                <a href="/">Back to Home</a>
+            <p>
+                <a href="/">← Back to Home</a>
             </p>
 
         </div>
 
     </div>
+
+</div>
 
 </body>
 </html>
