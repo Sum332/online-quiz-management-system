@@ -173,9 +173,9 @@ def register():
             return redirect("/login")
 
         except Exception as e:
-            print("Registration error:", e)
-            return "Email already registered!"
-
+            print("REGISTER ERROR:", e)
+            return "Registration error. Check Render logs."
+        
         finally:
             cursor.close()
             db.close()
