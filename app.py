@@ -245,6 +245,7 @@ def set_quiz_time():
     if session.get("role") != "admin":
         return redirect("/dashboard")
 
+    quiz_time = int(request.form["quiz_time"])
 
     db = get_db_connection()
     cursor = db.cursor()
