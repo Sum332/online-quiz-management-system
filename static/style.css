@@ -612,3 +612,20 @@ select:focus {
 .questions-list hr {
     display: none;
 }
+/* Add Question page buttons spacing */
+.question-submit {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.question-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.question-footer .btn {
+    margin: 0;
+    width: fit-content;
+}
