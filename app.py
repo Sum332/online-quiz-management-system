@@ -4,16 +4,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import smtplib
+import resend
 
 app = Flask(__name__)
 app.secret_key = "quiz_secret_key"
 
 def send_admin_request(name, email, phone, user_id):
-    sender_email = os.environ.get("EMAIL_ADDRESS")
-    sender_password = os.environ.get("EMAIL_PASSWORD")
     receiver_email = os.environ.get("ADMIN_EMAIL")
+    resend.api_key = os.environ.get("RESEND_API_KEY")
 
-    base_url = "https://online-quiz-management-system-1mqm.onrender.com"    
+    base_url = "https://online-quiz-management-system-1mqm.onrender.com"
 
     approve_url = f"{base_url}/admin/approve/{user_id}"
     reject_url = f"{base_url}/admin/reject/{user_id}"
@@ -61,31 +61,16 @@ def send_admin_request(name, email, phone, user_id):
     </body>
     </html>
     """
-    print("EMAIL_ADDRESS:", sender_email)
-    print("EMAIL_PASSWORD SET:", bool(sender_password))
-    print("ADMIN_EMAIL:", receiver_email)
 
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
+        response = resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": [receiver_email],
+            "subject": subject,
+            "html": html_message
+        })
 
-            email_message = f"""\
-Subject: {subject}
-From: {sender_email}
-To: {receiver_email}
-MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
-
-{html_message}
-"""
-
-            server.sendmail(
-                sender_email,
-                receiver_email,
-                email_message
-            )
-
+        print("Admin approval email sent:", response)
         return True
 
     except Exception as e:
