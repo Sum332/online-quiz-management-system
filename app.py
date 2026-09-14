@@ -15,8 +15,27 @@ def send_admin_request(name, email, phone, user_id):
 
     base_url = "https://online-quiz-management-system-1mqm.onrender.com"
 
-    approve_url = f"{base_url}/admin/approve/{user_id}"
-    reject_url = f"{base_url}/admin/reject/{user_id}"
+    # Generate secure approval token
+    import secrets
+    approval_token = secrets.token_urlsafe(32)
+
+    # Save token in database
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute(
+        "UPDATE users SET approval_token = %s WHERE id = %s",
+        (approval_token, user_id)
+    )
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    # Approval links using secure token
+    approve_url = f"{base_url}/admin/approve/{approval_token}"
+    reject_url = f"{base_url}/admin/reject/{approval_token}"
 
     subject = "New Admin Approval Request"
 
@@ -406,23 +425,31 @@ def admin_requests():
         requests=requests
     )
 
-@app.route("/admin/approve/<int:user_id>")
-def approve_admin(user_id):
-    if "user_id" not in session:
-        return redirect("/login")
-
-    if session["role"] != "admin":
-        return redirect("/dashboard")
-    if session.get("user_id") != 2:
-        return "Only main admin can approve requests!"
+@app.route("/admin/approve/<approval_token>")
+def approve_admin(approval_token):
 
     db = get_db_connection()
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
 
     cursor.execute(
-        "UPDATE users SET admin_status = 'approved' "
-        "WHERE id = %s AND role = 'admin'",
-        (user_id,)
+        "SELECT id FROM users "
+        "WHERE approval_token = %s "
+        "AND role = 'admin' "
+        "AND admin_status = 'pending'",
+        (approval_token,)
+    )
+
+    user = cursor.fetchone()
+
+    if not user:
+        cursor.close()
+        db.close()
+        return "Invalid or already used approval link!"
+
+    cursor.execute(
+        "UPDATE users SET admin_status = 'approved', approval_token = NULL "
+        "WHERE id = %s",
+        (user["id"],)
     )
 
     db.commit()
@@ -430,26 +457,34 @@ def approve_admin(user_id):
     cursor.close()
     db.close()
 
-    return redirect("/admin/requests")
+    return "Admin approved successfully! You can now login."
 
-@app.route("/admin/reject/<int:user_id>")
-def reject_admin(user_id):
-    if "user_id" not in session:
-        return redirect("/login")
 
-    if session["role"] != "admin":
-        return redirect("/dashboard")
-
-    if session.get("user_id") != 2:
-        return "Only main admin can reject requests!"
+@app.route("/admin/reject/<approval_token>")
+def reject_admin(approval_token):
 
     db = get_db_connection()
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
 
     cursor.execute(
-        "UPDATE users SET admin_status = 'rejected' "
-        "WHERE id = %s AND role = 'admin'",
-        (user_id,)
+        "SELECT id FROM users "
+        "WHERE approval_token = %s "
+        "AND role = 'admin' "
+        "AND admin_status = 'pending'",
+        (approval_token,)
+    )
+
+    user = cursor.fetchone()
+
+    if not user:
+        cursor.close()
+        db.close()
+        return "Invalid or already used rejection link!"
+
+    cursor.execute(
+        "UPDATE users SET admin_status = 'rejected', approval_token = NULL "
+        "WHERE id = %s",
+        (user["id"],)
     )
 
     db.commit()
@@ -457,7 +492,7 @@ def reject_admin(user_id):
     cursor.close()
     db.close()
 
-    return redirect("/admin/requests")
+    return "Admin request rejected successfully."
 
 #ADD QUESTION
 @app.route("/add_question", methods=["GET", "POST"])
