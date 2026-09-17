@@ -9,6 +9,75 @@ import resend
 app = Flask(__name__)
 app.secret_key = "quiz_secret_key"
 
+# SEND PASSWORD RESET EMAIL
+def send_reset_email(name, email, reset_token):
+
+    receiver_email = email
+    resend.api_key = os.environ.get("RESEND_API_KEY")
+
+    base_url = base_url = base_url = "https://online-quiz-management-system-1mqm.onrender.com"
+
+    reset_url = f"{base_url}/reset-password/{reset_token}"
+
+    subject = "Reset Your Password"
+
+    html_message = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif;">
+
+        <h2>Password Reset Request</h2>
+
+        <p>Hello <b>{name}</b>,</p>
+
+        <p>
+            We received a request to reset your password
+            for your Online Quiz Management System account.
+        </p>
+
+        <p>Click the button below to create a new password:</p>
+
+        <br>
+
+        <a href="{reset_url}"
+           style="background-color:#2563eb;
+                  color:white;
+                  padding:12px 20px;
+                  text-decoration:none;
+                  border-radius:6px;
+                  display:inline-block;">
+            Reset Password
+        </a>
+
+        <br><br>
+
+        <p>
+            If you did not request a password reset,
+            you can ignore this email.
+        </p>
+
+    </body>
+    </html>
+    """
+
+    try:
+
+        response = resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": [receiver_email],
+            "subject": subject,
+            "html": html_message
+        })
+
+        print("Password reset email sent:", response)
+
+        return True
+
+    except Exception as e:
+
+        print("Password reset email failed:", e)
+
+        return False
+
 def send_admin_request(name, email, phone, user_id):
     receiver_email = os.environ.get("ADMIN_EMAIL")
     resend.api_key = os.environ.get("RESEND_API_KEY")
@@ -810,6 +879,124 @@ def logout():
     session.clear()
     return redirect("/login")
 
+
+
+# FORGOT PASSWORD
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form["email"]
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT id, name, email FROM users WHERE email = %s",
+            (email,)
+        )
+
+        user = cursor.fetchone()
+
+        if not user:
+            cursor.close()
+            db.close()
+            return "Email not found!"
+
+        import secrets
+
+        reset_token = secrets.token_urlsafe(32)
+
+        cursor.execute(
+            "UPDATE users SET reset_token = %s WHERE id = %s",
+            (reset_token, user["id"])
+        )
+
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        send_reset_email(
+            user["name"],
+            user["email"],
+            reset_token
+        )
+
+        return "Password reset link has been sent to your email."
+
+    return render_template("forgot_password.html")
+
+# RESET PASSWORD
+@app.route("/reset-password/<reset_token>", methods=["GET", "POST"])
+def reset_password(reset_token):
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id, name FROM users WHERE reset_token = %s",
+        (reset_token,)
+    )
+
+    user = cursor.fetchone()
+
+    if not user:
+        cursor.close()
+        db.close()
+        return "Invalid or expired password reset link!"
+
+    if request.method == "POST":
+
+        new_password = request.form["password"]
+
+        hashed_password = generate_password_hash(new_password)
+
+        cursor.execute(
+            "UPDATE users SET password = %s, reset_token = NULL WHERE id = %s",
+            (hashed_password, user["id"])
+        )
+
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        return redirect("/login")
+
+    cursor.close()
+    db.close()
+
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Reset Password</title>
+    </head>
+
+    <body>
+
+        <h2>Reset Password</h2>
+
+        <form method="POST">
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter new password"
+                required
+            >
+
+            <br><br>
+
+            <button type="submit">
+                Set New Password
+            </button>
+
+        </form>
+
+    </body>
+    </html>
+    """
 
 if __name__ == "__main__":
     app.run(debug=True)
