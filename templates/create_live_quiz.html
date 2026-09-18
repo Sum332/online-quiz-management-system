@@ -20,6 +20,26 @@
                 required
             >
 
+            <h3>Select Questions</h3>
+
+            {% for question in questions %}
+
+            <div class="question-card">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        name="question_ids"
+                        value="{{ question.id }}"
+                    >
+
+                    {{ question.question }}
+                </label>
+
+            </div>
+
+            {% endfor %}
+
             <button type="submit" class="btn">
                 Create Quiz
             </button>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🎮 {{ quiz.quiz_title }}</h2>
+
+        <p>Answer the following questions</p>
+
+        <form method="POST" action="/submit_live_quiz/{{ quiz.id }}">
+
+            {% for question in questions %}
+
+            <div class="question-card">
+
+                <h3>{{ loop.index }}. {{ question.question }}</h3>
+
+                <label>
+                    <input type="radio"
+                           name="q{{ question.id }}"
+                           value="A"
+                           required>
+                    {{ question.option_a }}
+                </label>
+
+                <br>
+
+                <label>
+                    <input type="radio"
+                           name="q{{ question.id }}"
+                           value="B">
+                    {{ question.option_b }}
+                </label>
+
+                <br>
+
+                <label>
+                    <input type="radio"
+                           name="q{{ question.id }}"
+                           value="C">
+                    {{ question.option_c }}
+                </label>
+
+                <br>
+
+                <label>
+                    <input type="radio"
+                           name="q{{ question.id }}"
+                           value="D">
+                    {{ question.option_d }}
+                </label>
+
+            </div>
+
+            {% endfor %}
+
+            <button type="submit" class="btn">
+                Submit Quiz
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1030,40 +1030,72 @@ def reset_password(reset_token):
     </html>
     """
 
-
 # CREATE LIVE QUIZ
 @app.route("/create_live_quiz", methods=["GET", "POST"])
 def create_live_quiz():
     if "user_id" not in session or session["role"] != "admin":
         return redirect("/login")
 
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    # Main Admin sees all questions
+    if session["user_id"] == 2:
+        cursor.execute("SELECT * FROM questions ORDER BY id DESC")
+    else:
+        cursor.execute(
+            """
+            SELECT * FROM questions
+            WHERE created_by = %s
+            ORDER BY id DESC
+            """,
+            (session["user_id"],)
+        )
+
+    questions = cursor.fetchall()
+
     if request.method == "POST":
         quiz_title = request.form["quiz_title"]
+        selected_questions = request.form.getlist("question_ids")
 
         import random
-
         game_pin = str(random.randint(100000, 999999))
 
-        db = get_db_connection()
-        cursor = db.cursor()
-
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO live_quizzes
             (teacher_id, game_pin, quiz_title)
             VALUES (%s, %s, %s)
-        """, (
-            session["user_id"],
-            game_pin,
-            quiz_title
-        ))
+            """,
+            (session["user_id"], game_pin, quiz_title)
+        )
+
+        live_quiz_id = cursor.lastrowid
+
+        for question_id in selected_questions:
+            cursor.execute(
+                """
+                INSERT INTO live_quiz_questions
+                (live_quiz_id, question_id)
+                VALUES (%s, %s)
+                """,
+                (live_quiz_id, question_id)
+            )
 
         db.commit()
+
         cursor.close()
         db.close()
 
         return f"Quiz Created! Game PIN: {game_pin}"
 
-    return render_template("create_live_quiz.html")
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "create_live_quiz.html",
+        questions=questions
+    )
 
 # JOIN LIVE QUIZ
 @app.route("/join_live_quiz", methods=["GET", "POST"])
@@ -1091,21 +1123,80 @@ def join_live_quiz():
 
         cursor.execute(
             """
-            INSERT INTO live_quiz_participants
+            INSERT IGNORE INTO live_quiz_participants
             (live_quiz_id, student_id)
             VALUES (%s, %s)
             """,
             (quiz["id"], session["user_id"])
         )
 
-        db.commit()
+        cursor.execute(
+            """
+            SELECT q.*
+            FROM questions q
+            JOIN live_quiz_questions lq
+            ON q.id = lq.question_id
+            WHERE lq.live_quiz_id = %s
+            """,
+            (quiz["id"],)
+        )
+
+        questions = cursor.fetchall()
 
         cursor.close()
         db.close()
 
-        return f"Successfully Joined! Quiz: {quiz['quiz_title']}"
+        return render_template(
+            "live_quiz.html",
+            quiz=quiz,
+            questions=questions
+        )
 
     return render_template("join_live_quiz.html")
+
+# SUBMIT LIVE QUIZ
+@app.route("/submit_live_quiz/<int:live_quiz_id>", methods=["POST"])
+def submit_live_quiz(live_quiz_id):
+
+    if "user_id" not in session or session["role"] != "student":
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT q.*
+        FROM questions q
+        JOIN live_quiz_questions lq
+        ON q.id = lq.question_id
+        WHERE lq.live_quiz_id = %s
+    """, (live_quiz_id,))
+
+    questions = cursor.fetchall()
+
+    score = 0
+
+    for question in questions:
+
+        selected_answer = request.form.get(
+            f"q{question['id']}"
+        )
+
+        correct_answer = question["correct_answer"]
+
+        if selected_answer == correct_answer:
+            score += 1
+
+    total_questions = len(questions)
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "live_result.html",
+        score=score,
+        total_questions=total_questions
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

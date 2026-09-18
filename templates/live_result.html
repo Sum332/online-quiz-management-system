@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Quiz Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🎉 Live Quiz Completed!</h2>
+
+        <h3>Your Score</h3>
+
+        <h1>{{ score }} / {{ total_questions }}</h1>
+
+        <a href="/dashboard" class="btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>
