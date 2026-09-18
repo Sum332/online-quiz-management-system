@@ -748,3 +748,26 @@ select:focus {
     }
 
 }
+@media (max-width: 768px) {
+
+    .nav-links {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 15px;
+        gap: 5px;
+    }
+
+    .nav-links a {
+        background: transparent !important;
+        color: #1e293b !important;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: left;
+        font-size: 16px;
+    }
+
+    .nav-links a:hover {
+        background: #eef2ff !important;
+    }
+
+}
