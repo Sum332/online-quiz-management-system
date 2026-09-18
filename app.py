@@ -563,7 +563,7 @@ def reject_admin(approval_token):
 
     return "Admin request rejected successfully."
 
-#ADD QUESTION
+# ADD QUESTION
 @app.route("/add_question", methods=["GET", "POST"])
 def add_question():
     if "user_id" not in session or session["role"] != "admin":
@@ -582,16 +582,18 @@ def add_question():
 
         cursor.execute("""
             INSERT INTO questions
-            (question, option_a, option_b, option_c, option_d, correct_answer)
-            VALUES (%s, %s, %s, %s, %s, %s)
-""", (
-    question,
-    option_a,
-    option_b,
-    option_c,
-    option_d,
-    correct_answer
-))
+            (question, option_a, option_b, option_c, option_d,
+             correct_answer, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (
+            question,
+            option_a,
+            option_b,
+            option_c,
+            option_d,
+            correct_answer,
+            session["user_id"]
+        ))
 
         db.commit()
         cursor.close()
@@ -610,7 +612,22 @@ def view_questions():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM questions ORDER BY id DESC")
+    if session["user_id"] == 2:
+        # The Main Admin will be able to see all the questions.
+        cursor.execute(
+            "SELECT * FROM questions ORDER BY id DESC"
+        )
+    else:
+        # The teacher will only see their own questions.
+        cursor.execute(
+            """
+            SELECT * FROM questions
+            WHERE created_by = %s
+            ORDER BY id DESC
+            """,
+            (session["user_id"],)
+        )
+
     questions = cursor.fetchall()
 
     cursor.close()
@@ -621,7 +638,6 @@ def view_questions():
         questions=questions
     )
 
-
 # EDIT QUESTION
 @app.route("/edit_question/<int:id>", methods=["GET", "POST"])
 def edit_question(id):
@@ -630,6 +646,29 @@ def edit_question(id):
 
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
+
+    # The Main Admin will be able to edit all questions.
+    if session["user_id"] == 2:
+        cursor.execute(
+            "SELECT * FROM questions WHERE id=%s",
+            (id,)
+        )
+    else:
+        # A teacher can only edit their own questions.
+        cursor.execute(
+            """
+            SELECT * FROM questions
+            WHERE id=%s AND created_by=%s
+            """,
+            (id, session["user_id"])
+        )
+
+    question_data = cursor.fetchone()
+
+    if not question_data:
+        cursor.close()
+        db.close()
+        return "You are not allowed to edit this question!"
 
     if request.method == "POST":
         question = request.form["question"]
@@ -664,13 +703,6 @@ def edit_question(id):
         db.close()
 
         return redirect("/view_questions")
-
-    cursor.execute(
-        "SELECT * FROM questions WHERE id=%s",
-        (id,)
-    )
-
-    question_data = cursor.fetchone()
 
     cursor.close()
     db.close()
