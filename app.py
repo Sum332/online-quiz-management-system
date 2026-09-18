@@ -1030,5 +1030,40 @@ def reset_password(reset_token):
     </html>
     """
 
+
+# CREATE LIVE QUIZ
+@app.route("/create_live_quiz", methods=["GET", "POST"])
+def create_live_quiz():
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    if request.method == "POST":
+        quiz_title = request.form["quiz_title"]
+
+        import random
+
+        game_pin = str(random.randint(100000, 999999))
+
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        cursor.execute("""
+            INSERT INTO live_quizzes
+            (teacher_id, game_pin, quiz_title)
+            VALUES (%s, %s, %s)
+        """, (
+            session["user_id"],
+            game_pin,
+            quiz_title
+        ))
+
+        db.commit()
+        cursor.close()
+        db.close()
+
+        return f"Quiz Created! Game PIN: {game_pin}"
+
+    return render_template("create_live_quiz.html")
+
 if __name__ == "__main__":
     app.run(debug=True)

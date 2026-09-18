@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Live Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🎮 Create Live Quiz</h2>
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="quiz_title"
+                placeholder="Enter Quiz Title"
+                required
+            >
+
+            <button type="submit" class="btn">
+                Create Quiz
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>
