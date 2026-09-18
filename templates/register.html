@@ -12,11 +12,27 @@
 
 <body>
 
+<!-- Navigation -->
 <nav class="navbar">
-    <a href="/">QuizMaster</a>
-    <a href="/">Home</a>
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
+
+    <a href="/" class="logo">
+        🎓 QuizMaster
+    </a>
+
+    <button class="menu-toggle" onclick="toggleMenu()">
+        ☰
+    </button>
+
+    <div class="nav-links" id="navLinks">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/login">🔐 Login</a>
+
+        <a href="/register">📝 Register</a>
+
+    </div>
+
 </nav>
 
 <div class="container">
@@ -105,6 +121,12 @@
     </div>
 
 </div>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("active");
+    }
+</script>
 
 </body>
 </html>

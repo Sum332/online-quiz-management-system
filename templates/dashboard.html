@@ -12,25 +12,32 @@
 
 <body>
 
+<!-- Navigation -->
 <nav class="navbar">
 
-    <a href="/" style="font-size:24px;">
+    <a href="/" class="logo">
         🎓 QuizMaster
     </a>
 
-    <a href="/dashboard">Dashboard</a>
+    <button class="menu-toggle" onclick="toggleMenu()">
+        ☰
+    </button>
 
-    <a href="/quiz">Start Quiz</a>
+    <div class="nav-links" id="navLinks">
 
-    <a href="/result_history">My Results</a>
+        <a href="/dashboard">Dashboard</a>
 
-    <a href="/profile" class="profile-btn">
-        👤 Profile
-    </a>
+        <a href="/quiz">Start Quiz</a>
 
-    <a href="/logout">
-        Logout
-    </a>
+        <a href="/result_history">My Results</a>
+
+        <a href="/profile" class="profile-btn">
+            👤 Profile
+        </a>
+
+        <a href="/logout">Logout</a>
+
+    </div>
 
 </nav>
 
@@ -126,6 +133,12 @@
 ">
     © 2026 QuizMaster | Online Quiz Management System
 </footer>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("active");
+    }
+</script>
 
 </body>
 </html>

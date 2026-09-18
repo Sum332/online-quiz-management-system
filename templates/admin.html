@@ -13,34 +13,32 @@
 
 <body>
 
-    <!-- Navigation -->
+   <!-- Navigation -->
 <nav class="nav">
 
     <div class="nav-left">
 
-        <a href="/">
-            🏠 Home
-        </a>
+        <a href="/" class="logo">📝 Online Quiz</a>
 
-        <a href="/admin">
-            📊 Admin Dashboard
-        </a>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            ☰
+        </button>
 
-        <a href="/add_question">
-            ➕ Add Questions
-        </a>
+        <div class="nav-links" id="navLinks">
 
-        <a href="/view_questions">
-            📋 Questions
-        </a>
+            <a href="/">🏠 Home</a>
 
-        <a href="/profile">
-            👤 Profile
-        </a>
+            <a href="/admin">📊 Admin Dashboard</a>
 
-        <a href="/logout">
-            🚪 Logout
-        </a>
+            <a href="/add_question">➕ Add Questions</a>
+
+            <a href="/view_questions">📋 Questions</a>
+
+            <a href="/profile">👤 Profile</a>
+
+            <a href="/logout">🚪 Logout</a>
+
+        </div>
 
     </div>
 
@@ -230,6 +228,11 @@
 
            
     </div>
+<script>
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("active");
+    }
+</script>
 
 </body>
 
