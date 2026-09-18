@@ -1065,5 +1065,47 @@ def create_live_quiz():
 
     return render_template("create_live_quiz.html")
 
+# JOIN LIVE QUIZ
+@app.route("/join_live_quiz", methods=["GET", "POST"])
+def join_live_quiz():
+    if "user_id" not in session or session["role"] != "student":
+        return redirect("/login")
+
+    if request.method == "POST":
+        game_pin = request.form["game_pin"]
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT * FROM live_quizzes WHERE game_pin=%s AND status='waiting'",
+            (game_pin,)
+        )
+
+        quiz = cursor.fetchone()
+
+        if not quiz:
+            cursor.close()
+            db.close()
+            return "Invalid Game PIN or Quiz is not available!"
+
+        cursor.execute(
+            """
+            INSERT INTO live_quiz_participants
+            (live_quiz_id, student_id)
+            VALUES (%s, %s)
+            """,
+            (quiz["id"], session["user_id"])
+        )
+
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        return f"Successfully Joined! Quiz: {quiz['quiz_title']}"
+
+    return render_template("join_live_quiz.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
