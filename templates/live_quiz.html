@@ -13,6 +13,29 @@
 
         <p>Answer the following questions</p>
 
+            <div class="timer-box">
+                 ⏱️ Time Left:
+                 <span id="timer">60</span> seconds
+            </div>
+
+ <script>
+            let timeLeft = 60;
+
+            let timer = setInterval(function () {
+ 
+            timeLeft--;
+
+           document.getElementById("timer").innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            alert("Time is over!");
+            document.querySelector("form").submit();
+        }
+
+    }, 1000);
+</script>
+
         <form method="POST" action="/submit_live_quiz/{{ quiz.id }}">
 
             {% for question in questions %}
