@@ -1198,5 +1198,29 @@ def submit_live_quiz(live_quiz_id):
         total_questions=total_questions
     )
 
+# START LIVE QUIZ
+@app.route("/start_live_quiz/<int:live_quiz_id>")
+def start_live_quiz(live_quiz_id):
+
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        UPDATE live_quizzes
+        SET status = 'started'
+        WHERE id = %s AND teacher_id = %s
+    """, (live_quiz_id, session["user_id"]))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return "Live Quiz Started Successfully!"
+
+
 if __name__ == "__main__":
     app.run(debug=True)
