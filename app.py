@@ -1058,16 +1058,24 @@ def create_live_quiz():
         quiz_title = request.form["quiz_title"]
         selected_questions = request.form.getlist("question_ids")
 
+        # Timer in minutes
+        duration_minutes = float(request.form["duration"])
+        duration_seconds = int(duration_minutes * 60)
         import random
         game_pin = str(random.randint(100000, 999999))
 
         cursor.execute(
             """
             INSERT INTO live_quizzes
-            (teacher_id, game_pin, quiz_title)
-            VALUES (%s, %s, %s)
+            (teacher_id, game_pin, quiz_title, duration)
+            VALUES (%s, %s, %s, %s)
             """,
-            (session["user_id"], game_pin, quiz_title)
+            (
+                session["user_id"],
+                game_pin,
+                quiz_title,
+                duration_seconds
+            )
         )
 
         live_quiz_id = cursor.lastrowid

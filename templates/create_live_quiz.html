@@ -20,6 +20,17 @@
                 required
             >
 
+            <label for="duration">⏱️ Select Quiz Time</label>
+
+                <select name="duration" id="duration" required>
+                      <option value="">Select Time</option>
+                      <option value="0.5">30 Seconds</option>
+                      <option value="1">1 Minute</option>
+                      <option value="2">2 Minutes</option>
+                      <option value="5">5 Minutes</option>
+                      <option value="10">10 Minutes</option>
+                </select>
+
             <h3>Select Questions</h3>
 
             {% for question in questions %}
