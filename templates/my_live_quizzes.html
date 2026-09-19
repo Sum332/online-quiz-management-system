@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Live Quizzes</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🎮 My Live Quizzes</h2>
+
+        {% for quiz in quizzes %}
+
+        <div class="question-card">
+
+            <h3>{{ quiz.quiz_title }}</h3>
+
+            <p>Game PIN: {{ quiz.game_pin }}</p>
+            <p>Status: {{ quiz.status }}</p>
+
+            <a href="/start_live_quiz/{{ quiz.id }}"
+               class="btn">
+                ▶️ Start Quiz
+            </a>
+            <a href="/live_quiz_results/{{ quiz.id }}"
+                class="btn">
+                 📊 View Results
+            </a>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+
+</body>
+</html>

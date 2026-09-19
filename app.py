@@ -1138,6 +1138,8 @@ def join_live_quiz():
             (quiz["id"], session["user_id"])
         )
 
+        db.commit()
+
         cursor.execute(
             """
             SELECT q.*
@@ -1192,10 +1194,26 @@ def submit_live_quiz(live_quiz_id):
 
         correct_answer = question["correct_answer"]
 
-        if selected_answer == correct_answer:
-            score += 1
+        if selected_answer and correct_answer:
+         if selected_answer.strip().upper() == correct_answer.strip().upper():
+          score += 1
 
     total_questions = len(questions)
+
+    cursor.execute("""
+         UPDATE live_quiz_participants
+         SET score = %s,
+         total_questions = %s
+         WHERE live_quiz_id = %s
+         AND student_id = %s
+         """, (
+    score,
+    total_questions,
+    live_quiz_id,
+    session["user_id"]
+))
+
+    db.commit()
 
     cursor.close()
     db.close()
@@ -1229,6 +1247,69 @@ def start_live_quiz(live_quiz_id):
 
     return "Live Quiz Started Successfully!"
 
+# MY LIVE QUIZZES
+@app.route("/my_live_quizzes")
+def my_live_quizzes():
+
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    if session["user_id"] == 2:
+        cursor.execute("""
+            SELECT * FROM live_quizzes
+            ORDER BY id DESC
+        """)
+    else:
+        cursor.execute("""
+            SELECT * FROM live_quizzes
+            WHERE teacher_id = %s
+            ORDER BY id DESC
+        """, (session["user_id"],))
+
+    quizzes = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "my_live_quizzes.html",
+        quizzes=quizzes
+    )
+
+# LIVE QUIZ RESULTS
+@app.route("/live_quiz_results/<int:live_quiz_id>")
+def live_quiz_results(live_quiz_id):
+
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            u.name AS student_name,
+            lqp.score,
+            lqp.total_questions,
+            lqp.joined_at
+        FROM live_quiz_participants lqp
+        JOIN users u ON lqp.student_id = u.id
+        WHERE lqp.live_quiz_id = %s
+        ORDER BY lqp.score DESC
+    """, (live_quiz_id,))
+
+    results = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "live_quiz_results.html",
+        results=results
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
