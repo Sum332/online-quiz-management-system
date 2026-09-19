@@ -818,7 +818,7 @@ select:focus {
 /* ADMIN BUTTONS SAME SIZE */
 .admin-action {
     width: 100%;
-    min-height: 80px;
+    min-height: 65px;
     display: flex;
     align-items: center;
     gap: 20px;
