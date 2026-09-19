@@ -74,6 +74,56 @@
             <!-- Results -->
             {% if results %}
 
+            <!-- Performance Chart -->
+<div class="card performance-card">
+
+    <h2>📈 Performance Overview</h2>
+    <p>Track your quiz scores.</p>
+
+    <canvas id="performanceChart"></canvas>
+
+</div>
+
+<div id="chartData"
+     data-labels='{{ results | map(attribute="id") | list | tojson }}'
+     data-scores='{{ results | map(attribute="score") | list | tojson }}'>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const chartData = document.getElementById("chartData");
+
+    const labels = JSON.parse(chartData.dataset.labels);
+    const scores = JSON.parse(chartData.dataset.scores);
+
+    new Chart(document.getElementById("performanceChart"), {
+        type: "line",
+
+        data: {
+            labels: labels.map(id => "Quiz " + id),
+
+            datasets: [{
+                label: "Quiz Score",
+                data: scores,
+                borderWidth: 3,
+                tension: 0.3,
+                fill: false
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
                 <div class="results-list">
 
                     {% for result in results %}

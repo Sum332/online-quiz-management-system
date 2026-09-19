@@ -305,36 +305,28 @@ def admin():
     if session["role"] != "admin":
         return redirect("/dashboard")
 
-    return render_template(
-        "admin.html",
-        name=session["user_name"]
-    )
-@app.route("/admin/set-quiz-time", methods=["POST"])
-def set_quiz_time():
-
-    if "user_id" not in session:
-        return redirect("/login")
-
-    if session.get("role") != "admin":
-        return redirect("/dashboard")
-
-    quiz_time = int(request.form["quiz_time"])
-
     db = get_db_connection()
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
 
-    cursor.execute(
-        "UPDATE quiz_settings SET quiz_time = %s WHERE id = 1",
-        (quiz_time,)
-    )
+    cursor.execute("SELECT COUNT(*) AS total_students FROM users WHERE role = 'student'")
+    total_students = cursor.fetchone()["total_students"]
 
-    db.commit()
+    cursor.execute("SELECT COUNT(*) AS total_questions FROM questions")
+    total_questions = cursor.fetchone()["total_questions"]
+
+    cursor.execute("SELECT COUNT(*) AS total_results FROM results")
+    total_results = cursor.fetchone()["total_results"]
 
     cursor.close()
     db.close()
 
-    return redirect("/admin")
-
+    return render_template(
+        "admin.html",
+        name=session["user_name"],
+        total_students=total_students,
+        total_questions=total_questions,
+        total_results=total_results
+    )
 
 # STUDENT DASHBOARD
 @app.route("/dashboard")
