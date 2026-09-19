@@ -815,3 +815,22 @@ select:focus {
         transform: scale(1);
     }
 }
+/* ADMIN BUTTONS SAME SIZE */
+.admin-action {
+    width: 100%;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+}
+
+/* BUTTON TEXT */
+.admin-action strong {
+    font-size: 24px;
+}
+
+.admin-action small {
+    font-size: 16px;
+}
