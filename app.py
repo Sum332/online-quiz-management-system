@@ -1212,6 +1212,15 @@ def submit_live_quiz(live_quiz_id):
     live_quiz_id,
     session["user_id"]
 ))
+    # SAVE LIVE QUIZ RESULT IN RESULTS TABLE
+    cursor.execute("""
+    INSERT INTO results (user_id, score, total_questions)
+    VALUES (%s, %s, %s)
+""", (
+    session["user_id"],
+    score,
+    total_questions
+))
 
     db.commit()
 
