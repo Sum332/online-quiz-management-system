@@ -217,6 +217,12 @@ def register():
         password = request.form["password"]
         role = request.form["role"]
 
+        if role not in ["student", "admin"]:
+            return "Invalid role selected."
+
+        if len(password) < 6:
+            return "Password must be at least 6 characters."
+
         hashed_password = generate_password_hash(password)
 
         db = get_db_connection()
@@ -236,10 +242,8 @@ def register():
 
             db.commit()
 
-            # Get newly created user's ID
             user_id = cursor.lastrowid
 
-            # Send approval request only for Admin
             if role == "admin":
                 send_admin_request(name, email, phone, user_id)
 
@@ -248,13 +252,12 @@ def register():
         except Exception as e:
             print("REGISTER ERROR:", e)
             return "Registration error. Check Render logs."
-        
+
         finally:
             cursor.close()
             db.close()
 
     return render_template("register.html")
-
 
 # LOGIN
 @app.route("/login", methods=["GET", "POST"])
@@ -558,8 +561,11 @@ def reject_admin(approval_token):
 # ADD QUESTION
 @app.route("/add_question", methods=["GET", "POST"])
 def add_question():
-    if "user_id" not in session or session["role"] != "admin":
+    if "user_id" not in session:
         return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
 
     if request.method == "POST":
         question = request.form["question"]
