@@ -1079,3 +1079,17 @@ select:focus {
         gap: 10px;
     }
 }
+/* Live Quiz Options */
+.question-card label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    cursor: pointer;
+}
+
+.question-card input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
