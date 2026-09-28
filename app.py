@@ -331,6 +331,34 @@ def admin():
         total_results=total_results
     )
 
+# ADMIN - VIEW ALL STUDENTS
+@app.route("/admin/students")
+def admin_students():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id, name, email, phone, admin_status
+        FROM users
+        WHERE role = 'student'
+        ORDER BY id DESC
+    """)
+
+    students = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_students.html",
+        students=students
+    )
 # STUDENT DASHBOARD
 @app.route("/dashboard")
 def dashboard():

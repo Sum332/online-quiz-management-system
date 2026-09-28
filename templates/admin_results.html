@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Results</title>
+    <title>Student Results - Online Quiz Management System</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
@@ -26,41 +26,71 @@
 
         <h1>📊 Student Results</h1>
 
+        <p>View quiz results of all registered students.</p>
+
         {% if results %}
 
-        <table border="1" cellpadding="10" cellspacing="0">
+        <div class="table-wrapper">
 
-            <tr>
-                <th>ID</th>
-                <th>Student Name</th>
-                <th>Email</th>
-                <th>Score</th>
-                <th>Total Questions</th>
-            </tr>
+            <table class="results-table">
 
-            {% for result in results %}
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Score</th>
+                        <th>Total Questions</th>
+                    </tr>
+                </thead>
 
-            <tr>
-                <td>{{ result.id }}</td>
-                <td>{{ result.name }}</td>
-                <td>{{ result.email }}</td>
-                <td>{{ result.score }}</td>
-                <td>{{ result.total_questions }}</td>
-            </tr>
+                <tbody>
 
-            {% endfor %}
+                    {% for result in results %}
 
-        </table>
+                    <tr>
+                        <td>{{ result.id }}</td>
+
+                        <td class="student-name">
+                            {{ result.name }}
+                        </td>
+
+                        <td>
+                            {{ result.email }}
+                        </td>
+
+                        <td class="score">
+                            {{ result.score }}
+                        </td>
+
+                        <td>
+                            {{ result.total_questions }}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
 
         {% else %}
 
-        <p>No student results available.</p>
+        <p class="empty-message">
+            No student results available.
+        </p>
 
         {% endif %}
 
-        <br>
+        <div class="back-button">
 
-        <a href="/admin">⬅️ Back to Admin Dashboard</a>
+            <a href="/admin" class="btn">
+                ⬅ Back to Admin Dashboard
+            </a>
+
+        </div>
 
     </div>
 

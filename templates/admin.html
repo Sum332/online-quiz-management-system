@@ -13,7 +13,7 @@
 
 <body>
 
-   <!-- Navigation -->
+<!-- Navigation -->
 <nav class="nav">
 
     <div class="nav-left">
@@ -27,19 +27,12 @@
         <div class="nav-links" id="navLinks">
 
             <a href="/">🏠 Home</a>
-
             <a href="/admin">📊 Admin Dashboard</a>
-
             <a href="/add_question">➕ Add Questions</a>
-
             <a href="/view_questions">📋 Questions</a>
-            
             <a href="/create_live_quiz">🎮 Create Live Quiz</a>
-
             <a href="/my_live_quizzes">📊 My Live Quizzes</a>
-
             <a href="/profile">👤 Profile</a>
-
             <a href="/logout">🚪 Logout</a>
 
         </div>
@@ -48,32 +41,162 @@
 
 </nav>
 
-    <!-- Main Dashboard -->
-    <div class="container">
 
-        <div class="card dashboard-card">
+<!-- Main Dashboard -->
+<div class="container">
+
+    <div class="card dashboard-card">
+
+        <!-- Header -->
+        <div class="admin-header">
+
+            <div class="admin-icon">
+                👨‍🏫
+            </div>
+
+            <div>
+
+                <span class="role-badge">
+                    ADMIN / TEACHER
+                </span>
+
+                <h1>
+                    Welcome, Admin! 👋
+                </h1>
+
+                <p class="subtitle">
+                    Manage your quizzes, questions and students
+                    from one place.
+                </p>
+
+            </div>
+
+        </div>
 
 
-            <!-- Header -->
-            <div class="admin-header">
+        <!-- Admin Actions -->
+        <div class="dashboard-buttons">
 
-                <div class="admin-icon">
-                    👨‍🏫
+            <a href="/add_question" class="btn admin-action">
+
+                <span class="action-icon">➕</span>
+
+                <span>
+                    <strong>Add Questions</strong>
+                    <small>Create new quiz questions</small>
+                </span>
+
+            </a>
+
+
+            <a href="/view_questions" class="btn admin-action">
+
+                <span class="action-icon">📋</span>
+
+                <span>
+                    <strong>View Questions</strong>
+                    <small>Manage existing questions</small>
+                </span>
+
+            </a>
+
+
+            <a href="/admin_results" class="btn admin-action">
+
+                <span class="action-icon">📊</span>
+
+                <span>
+                    <strong>Student Results</strong>
+                    <small>Monitor student performance</small>
+                </span>
+
+            </a>
+
+
+            <a href="/create_live_quiz" class="btn admin-action">
+
+                <span class="action-icon">🎮</span>
+
+                <span>
+                    <strong>Live Quiz</strong>
+                    <small>Create and manage live quizzes</small>
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <!-- Admin Statistics -->
+        <div class="dashboard-buttons">
+
+            <a href="/admin/students"
+               style="text-decoration: none; color: inherit;">
+
+                <div class="card">
+
+                    <h2>👨‍🎓 Total Students</h2>
+
+                    <h1>{{ total_students }}</h1>
+
+                    <p>View All Students →</p>
+
+                </div>
+
+            </a>
+
+
+            <a href="/view_questions"
+               style="text-decoration: none; color: inherit;">
+
+                <div class="card">
+
+                    <h2>📝 Total Questions</h2>
+
+                    <h1>{{ total_questions }}</h1>
+
+                    <p>View All Questions →</p>
+
+                </div>
+
+            </a>
+
+
+            <a href="/admin_results"
+               style="text-decoration: none; color: inherit;">
+
+                <div class="card">
+
+                    <h2>📊 Total Results</h2>
+
+                    <h1>{{ total_results }}</h1>
+
+                    <p>View All Results →</p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- Quiz Timer -->
+        <div class="card admin-setting-card">
+
+            <div class="setting-header">
+
+                <div class="setting-icon">
+                    ⏱️
                 </div>
 
                 <div>
 
-                    <span class="role-badge">
-                        ADMIN / TEACHER
-                    </span>
-
-                    <h1>
-                        Welcome, Admin! 👋
-                    </h1>
+                    <h2>
+                        Quiz Time Control
+                    </h2>
 
                     <p class="subtitle">
-                        Manage your quizzes, questions and students
-                        from one place.
+                        Set the time limit for the entire quiz.
                     </p>
 
                 </div>
@@ -81,193 +204,109 @@
             </div>
 
 
-            <!-- Dashboard Cards -->
-            <div class="dashboard-buttons">
+            <form action="/admin/set-quiz-time"
+                  method="POST"
+                  class="timer-form">
 
-                <a href="/add_question" class="btn admin-action">
+                <label for="quiz_time">
+                    Choose Quiz Duration
+                </label>
 
-                    <span class="action-icon">
-                        ➕
-                    </span>
+                <select name="quiz_time"
+                        id="quiz_time"
+                        required>
 
-                    <span>
-                        <strong>Add Questions</strong>
-                        <small>Create new quiz questions</small>
-                    </span>
+                    <option value="">
+                        Select Quiz Time
+                    </option>
 
-                </a>
+                    <option value="0.5">
+                        30 Seconds
+                    </option>
+
+                    <option value="1">
+                        1 Minute
+                    </option>
+
+                    <option value="2">
+                        2 Minutes
+                    </option>
+
+                    <option value="5">
+                        5 Minutes
+                    </option>
+
+                    <option value="10">
+                        10 Minutes
+                    </option>
+
+                    <option value="15">
+                        15 Minutes
+                    </option>
+
+                    <option value="20">
+                        20 Minutes
+                    </option>
+
+                    <option value="30">
+                        30 Minutes
+                    </option>
+
+                </select>
+
+                <button type="submit" class="btn">
+                    💾 Save Quiz Time
+                </button>
+
+            </form>
+
+        </div>
 
 
-                <a href="/view_questions" class="btn admin-action">
+        <!-- Admin Information -->
+        <div class="admin-info">
 
-                    <span class="action-icon">
-                        📋
-                    </span>
+            <div class="info-item">
 
-                    <span>
-                        <strong>View Questions</strong>
-                        <small>Manage existing questions</small>
-                    </span>
+                <span>🎯</span>
 
-                </a>
-
-
-                <a href="/admin_results" class="btn admin-action">
-
-                    <span class="action-icon">
-                        📊
-                    </span>
-
-                    <span>
-                        <strong>Student Results</strong>
-                        <small>Monitor student performance</small>
-                    </span>
-
-                </a>
-
-                <a href="/create_live_quiz" class="btn admin-action">
-
-                    <span class="action-icon">
-                        🎮
-                    </span>
-
-                     <span>
-                         <strong>Live Quiz</strong>
-                         <small>Create and manage live quizzes</small>
-                    </span>
-
-                </a>
-
-                <!-- Admin Statistics -->
-                <div class="dashboard-buttons">
-
-                <div class="card">
-                <h2>👨‍🎓 Total Students</h2>
-                <h1>{{ total_students }}</h1>
+                <div>
+                    <strong>Quiz Management</strong>
+                    <small>Create and manage questions</small>
                 </div>
-
-                <div class="card">
-                <h2>📝 Total Questions</h2>
-                <h1>{{ total_questions }}</h1>
-                </div>
-
-                <div class="card">
-                <h2>📊 Total Results</h2>
-                <h1>{{ total_results }}</h1>
-                </div>
-
-                </div>
-
-            <!-- Quiz Timer -->
-            <div class="card admin-setting-card">
-
-                <div class="setting-header">
-
-                    <div class="setting-icon">
-                        ⏱️
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Quiz Time Control
-                        </h2>
-
-                        <p class="subtitle">
-                            Set the time limit for the entire quiz.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <form action="/admin/set-quiz-time"
-                      method="POST"
-                      class="timer-form">
-
-                    <label for="quiz_time">
-                        Choose Quiz Duration
-                    </label>
-
-                    <select name="quiz_time"
-                            id="quiz_time"
-                            required>
-
-                        <option value="">
-                            Select Quiz Time
-                        </option>
-
-                        <option value="0.5">
-                            30 Seconds
-                        </option>
- 
-                        <option value="1">
-                            1 Minute
-                        </option>
-
-                        <option value="2">
-                            2 Minutes
-                        </option>
-                        
-                        <option value="5">
-                            5 Minutes
-                        </option>
-
-                        <option value="10">
-                            10 Minutes
-                        </option>
-
-                        <option value="15">
-                            15 Minutes
-                        </option>
-
-                        <option value="20">
-                            20 Minutes
-                        </option>
-
-                        <option value="30">
-                            30 Minutes
-                        </option>
-
-                    </select>
-
-                    <button type="submit" class="btn">
-                        💾 Save Quiz Time
-                    </button>
-
-                </form>
 
             </div>
 
 
-            <!-- Admin Information -->
-            <div class="admin-info">
+            <div class="info-item">
 
-                <div class="info-item">
-                    <span>🎯</span>
-                    <div>
-                        <strong>Quiz Management</strong>
-                        <small>Create and manage questions</small>
-                    </div>
+                <span>👨‍🎓</span>
+
+                <div>
+                    <strong>Student Monitoring</strong>
+                    <small>Check student quiz performance</small>
                 </div>
 
+            </div>
 
-                <div class="info-item">
-                    <span>👨‍🎓</span>
-                    <div>
-                        <strong>Student Monitoring</strong>
-                        <small>Check student quiz performance</small>
-                    </div>
-                </div>
+        </div>
 
-
-           
     </div>
+
+</div>
+
+
 <script>
-    function toggleMenu() {
-        document.getElementById("navLinks").classList.toggle("active");
-    }
+
+function toggleMenu() {
+
+    document
+        .getElementById("navLinks")
+        .classList
+        .toggle("active");
+
+}
+
 </script>
 
 </body>

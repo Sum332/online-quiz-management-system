@@ -1093,3 +1093,128 @@ select:focus {
     height: 18px;
     flex-shrink: 0;
 }
+/* ================================
+   Admin Students Table
+================================ */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 25px;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.students-table th {
+    background: #0f172a;
+    color: #ffffff;
+    padding: 15px;
+    text-align: left;
+    font-size: 15px;
+}
+
+.students-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+.students-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.student-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.status-badge {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.back-button {
+    margin-top: 25px;
+}
+
+.empty-message {
+    margin-top: 20px;
+    color: #64748b;
+}
+/* ================================
+   Admin Results Table
+================================ */
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 25px;
+}
+
+.results-table th {
+    background: #0f172a;
+    color: #ffffff;
+    padding: 15px;
+    text-align: left;
+    font-size: 15px;
+}
+
+.results-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+.results-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.results-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.results-table .student-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.results-table .score {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.results-table th:first-child,
+.results-table td:first-child {
+    text-align: center;
+}
+
+.results-table th:nth-child(4),
+.results-table td:nth-child(4),
+.results-table th:nth-child(5),
+.results-table td:nth-child(5) {
+    text-align: center;
+}
+
+.empty-message {
+    margin-top: 20px;
+    color: #64748b;
+}
+
+.back-button {
+    margin-top: 25px;
+}

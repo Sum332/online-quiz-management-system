@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Students - Online Quiz Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>👨‍🎓 All Students</h1>
+        <p>View all registered students in the system.</p>
+
+        {% if students %}
+
+        <div class="table-wrapper">
+
+            <table class="students-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td class="student-name">{{ student.name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.phone }}</td>
+
+                        <td>
+                            <span class="status-badge">
+                                {{ student.admin_status }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <p class="empty-message">
+            No students registered.
+        </p>
+
+        {% endif %}
+
+        <div class="back-button">
+            <a href="/admin" class="btn">
+                ⬅ Back to Admin Dashboard
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
