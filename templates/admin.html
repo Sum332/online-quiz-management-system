@@ -73,112 +73,65 @@
 
         </div>
 
-
-        <!-- Admin Actions -->
-        <div class="dashboard-buttons">
-
-            <a href="/add_question" class="btn admin-action">
-
-                <span class="action-icon">➕</span>
-
-                <span>
-                    <strong>Add Questions</strong>
-                    <small>Create new quiz questions</small>
-                </span>
-
-            </a>
-
-
-            <a href="/view_questions" class="btn admin-action">
-
-                <span class="action-icon">📋</span>
-
-                <span>
-                    <strong>View Questions</strong>
-                    <small>Manage existing questions</small>
-                </span>
-
-            </a>
-
-
-            <a href="/admin_results" class="btn admin-action">
-
-                <span class="action-icon">📊</span>
-
-                <span>
-                    <strong>Student Results</strong>
-                    <small>Monitor student performance</small>
-                </span>
-
-            </a>
-
-
-            <a href="/create_live_quiz" class="btn admin-action">
-
-                <span class="action-icon">🎮</span>
-
-                <span>
-                    <strong>Live Quiz</strong>
-                    <small>Create and manage live quizzes</small>
-                </span>
-
-            </a>
-
-        </div>
-
-
         <!-- Admin Statistics -->
-        <div class="dashboard-buttons">
 
-            <a href="/admin/students"
-               style="text-decoration: none; color: inherit;">
+<div class="admin-statistics">
 
-                <div class="card">
-
-                    <h2>👨‍🎓 Total Students</h2>
-
-                    <h1>{{ total_students }}</h1>
-
-                    <p>View All Students →</p>
-
-                </div>
-
-            </a>
-
-
-            <a href="/view_questions"
-               style="text-decoration: none; color: inherit;">
-
-                <div class="card">
-
-                    <h2>📝 Total Questions</h2>
-
-                    <h1>{{ total_questions }}</h1>
-
-                    <p>View All Questions →</p>
-
-                </div>
-
-            </a>
-
-
-            <a href="/admin_results"
-               style="text-decoration: none; color: inherit;">
-
-                <div class="card">
-
-                    <h2>📊 Total Results</h2>
-
-                    <h1>{{ total_results }}</h1>
-
-                    <p>View All Results →</p>
-
-                </div>
-
-            </a>
-
+    <a href="/admin/students" class="stat-card">
+        <div class="stat-icon">👨‍🎓</div>
+        <div class="stat-content">
+            <h3>Total Students</h3>
+            <h1>{{ total_students }}</h1>
+            <p>View All Students →</p>
         </div>
+    </a>
 
+    <a href="/view_questions" class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-content">
+            <h3>Total Questions</h3>
+            <h1>{{ total_questions }}</h1>
+            <p>View All Questions →</p>
+        </div>
+    </a>
+
+    <a href="/admin_results" class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+            <h3>Total Results</h3>
+            <h1>{{ total_results }}</h1>
+            <p>View Student Results →</p>
+        </div>
+    </a>
+
+    <a href="/add_question" class="stat-card">
+        <div class="stat-icon">➕</div>
+        <div class="stat-content">
+            <h3>Add Questions</h3>
+            <h1>+</h1>
+            <p>Create New Questions →</p>
+        </div>
+    </a>
+
+    <a href="/create_live_quiz" class="stat-card">
+        <div class="stat-icon">🎮</div>
+        <div class="stat-content">
+            <h3>Live Quiz</h3>
+            <h1>▶</h1>
+            <p>Create Live Quiz →</p>
+        </div>
+    </a>
+
+    <a href="/my_live_quizzes" class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+            <h3>My Live Quizzes</h3>
+            <h1>→</h1>
+            <p>Manage Live Quizzes →</p>
+        </div>
+    </a>
+
+</div>
 
         <!-- Quiz Timer -->
         <div class="card admin-setting-card">
