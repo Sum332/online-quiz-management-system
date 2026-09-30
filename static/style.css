@@ -1342,3 +1342,16 @@ select:focus {
 .admin-statistics {
     margin-bottom: 35px !important;
 }
+/* Mobile Navbar Fix */
+
+@media (max-width: 600px) {
+    .navbar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .menu-toggle {
+        margin-left: auto !important;
+    }
+}
