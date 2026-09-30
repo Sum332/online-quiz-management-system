@@ -1355,3 +1355,22 @@ select:focus {
         margin-left: auto !important;
     }
 }
+@media (max-width: 768px) {
+    .navbar {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .navbar .logo {
+        margin-right: auto !important;
+    }
+
+    .navbar .menu-toggle {
+        display: block !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+}
