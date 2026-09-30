@@ -1389,3 +1389,40 @@ select:focus {
         flex: 0 !important;
     }
 }
+/* Final Mobile Navbar - Student Dashboard */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+    }
+
+    .navbar .menu-toggle {
+        order: 1 !important;
+        display: block !important;
+        margin: 0 12px 0 0 !important;
+        padding: 5px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .navbar .logo {
+        order: 2 !important;
+        display: block !important;
+        margin: 0 !important;
+        flex: 0 !important;
+    }
+
+    .navbar .nav-links {
+        order: 3 !important;
+        display: none !important;
+        width: 100% !important;
+        flex-basis: 100% !important;
+    }
+
+    .navbar .nav-links.active {
+        display: flex !important;
+    }
+}
