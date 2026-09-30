@@ -1374,3 +1374,18 @@ select:focus {
         flex-shrink: 0 !important;
     }
 }
+@media (max-width: 768px) {
+    .navbar {
+        justify-content: flex-start !important;
+    }
+
+    .navbar .menu-toggle {
+        order: 1 !important;
+        margin: 0 12px 0 0 !important;
+    }
+
+    .navbar .logo {
+        order: 2 !important;
+        flex: 0 !important;
+    }
+}
