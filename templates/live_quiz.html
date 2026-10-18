@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,31 +14,14 @@
 
         <p>Answer the following questions</p>
 
-             <div class="timer-box">
-             ⏱️ Time Left:
-             <span id="timer" data-duration="{{ quiz.duration }}">
-               {{ quiz.duration }}
-             </span>
-               seconds
-             </div>
+        <div class="timer-box">
+            ⏱️ Time Left:
+            <span id="timer" data-duration="{{ quiz.duration }}">
+                {{ quiz.duration }}
+            </span>
+            seconds
+        </div>
 
-<script>
-    let timeLeft = Number(
-        document.getElementById("timer").dataset.duration
-    );
-
-    let timer = setInterval(function () {
-        timeLeft--;
-
-        document.getElementById("timer").innerText = timeLeft;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            alert("Time is over!");
-            document.querySelector("form").submit();
-        }
-    }, 1000);
-</script>
         <form method="POST" action="/submit_live_quiz/{{ quiz.id }}">
 
             {% for question in questions %}
@@ -86,13 +70,40 @@
             {% endfor %}
 
             <button type="submit" class="btn">
-                Submit Quiz
+                Submit Quiz →
             </button>
 
         </form>
 
     </div>
 </div>
+
+<script>
+
+    let timeLeft = Number(
+        document.getElementById("timer").dataset.duration
+    );
+
+    let timer = setInterval(function () {
+
+        timeLeft--;
+
+        document.getElementById("timer").innerText =
+            timeLeft;
+
+        if (timeLeft <= 0) {
+
+            clearInterval(timer);
+
+            alert("Time is over!");
+
+            document.querySelector("form").submit();
+
+        }
+
+    }, 1000);
+
+</script>
 
 </body>
 </html>

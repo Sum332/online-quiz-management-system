@@ -1426,3 +1426,114 @@ select:focus {
         display: flex !important;
     }
 }
+/* LIVE LEADERBOARD */
+
+.leaderboard {
+    margin-top: 25px;
+}
+
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+}
+
+.rank {
+    width: 45px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.student-name {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.score {
+    font-size: 17px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+/* DUOLINGO-STYLE LIVE QUIZ LEADERBOARD */
+
+.leaderboard-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.leaderboard-card h2 {
+    color: #1e293b;
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.leaderboard-card .leaderboard-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.leaderboard-card .leaderboard-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.08);
+}
+
+.leaderboard-card .rank {
+    width: 42px;
+    font-size: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.leaderboard-card .student-name {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    overflow-wrap: anywhere;
+}
+
+.leaderboard-card .score {
+    font-size: 15px;
+    font-weight: 800;
+    color: #16a34a;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .leaderboard-card {
+        padding: 18px;
+    }
+
+    .leaderboard-card .leaderboard-row {
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .leaderboard-card .student-name {
+        font-size: 14px;
+    }
+
+    .leaderboard-card .score {
+        font-size: 13px;
+    }
+}

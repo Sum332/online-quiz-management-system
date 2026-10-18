@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Leaderboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>🏆 Live Leaderboard</h2>
+
+        <p>Current ranking of all participants</p>
+
+        <div class="leaderboard">
+
+            {% for student in leaderboard %}
+
+            <div class="leaderboard-row">
+
+                <div class="rank">
+
+                    {% if loop.index == 1 %}
+                        🥇
+                    {% elif loop.index == 2 %}
+                        🥈
+                    {% elif loop.index == 3 %}
+                        🥉
+                    {% else %}
+                        {{ loop.index }}
+                    {% endif %}
+
+                </div>
+
+                <div class="student-name">
+                    {{ student.student_name }}
+                </div>
+
+                <div class="score">
+                    {{ student.score or 0 }}/{{ student.total_questions or 0 }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <br>
+
+        <a href="/dashboard" class="btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

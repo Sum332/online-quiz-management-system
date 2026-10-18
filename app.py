@@ -359,6 +359,7 @@ def admin_students():
         "admin_students.html",
         students=students
     )
+
 # STUDENT DASHBOARD
 @app.route("/dashboard")
 def dashboard():
@@ -368,29 +369,33 @@ def dashboard():
     if session["role"] != "student":
         return redirect("/admin")
 
-    return render_template(
-        "dashboard.html",
-        name=session["user_name"]
-    )
-@app.route("/profile")
-def profile():
-    if "user_id" not in session:
-        return redirect("/login")
-
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute(
-        "SELECT * FROM users WHERE id = %s",
-        (session["user_id"],)
-    )
+    cursor.execute("""
+        SELECT
+            u.id,
+            u.name AS student_name,
+            COALESCE(SUM(lqp.score), 0) AS total_score
+        FROM users u
+        LEFT JOIN live_quiz_participants lqp
+            ON u.id = lqp.student_id
+        WHERE u.role = 'student'
+        GROUP BY u.id, u.name
+        ORDER BY total_score DESC, u.name ASC
+        LIMIT 10
+    """)
 
-    user = cursor.fetchone()
+    leaderboard = cursor.fetchall()
 
     cursor.close()
     db.close()
 
-    return render_template("profile.html", user=user)
+    return render_template(
+        "dashboard.html",
+        name=session["user_name"],
+        leaderboard=leaderboard
+    )
 
 
 @app.route("/edit_profile", methods=["GET", "POST"])
@@ -1258,6 +1263,144 @@ def submit_live_quiz(live_quiz_id):
         score=score,
         total_questions=total_questions
     )
+# SUBMIT ONE LIVE QUIZ QUESTION
+@app.route("/submit_live_question/<int:live_quiz_id>", methods=["POST"])
+def submit_live_question(live_quiz_id):
+
+    if "user_id" not in session or session["role"] != "student":
+        return {
+            "success": False,
+            "message": "Please login as student."
+        }
+
+    data = request.get_json()
+
+    question_id = data.get("question_id")
+    selected_answer = data.get("answer")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    # Get question
+    cursor.execute("""
+        SELECT *
+        FROM questions
+        WHERE id = %s
+    """, (question_id,))
+
+    question = cursor.fetchone()
+
+    if not question:
+        cursor.close()
+        db.close()
+
+        return {
+            "success": False,
+            "message": "Question not found."
+        }
+
+    # Check answer
+    is_correct = False
+
+    if selected_answer and question["correct_answer"]:
+
+        if selected_answer.strip().upper() == \
+           question["correct_answer"].strip().upper():
+
+            is_correct = True
+
+
+    # Get total questions
+    cursor.execute("""
+        SELECT COUNT(*) AS total_questions
+        FROM live_quiz_questions
+        WHERE live_quiz_id = %s
+    """, (live_quiz_id,))
+
+    total_questions = cursor.fetchone()["total_questions"]
+
+
+    # Update student's score
+    score_increment = 1 if is_correct else 0
+
+    cursor.execute("""
+        UPDATE live_quiz_participants
+        SET
+            score = COALESCE(score, 0) + %s,
+            total_questions = %s
+        WHERE live_quiz_id = %s
+        AND student_id = %s
+    """, (
+        score_increment,
+        total_questions,
+        live_quiz_id,
+        session["user_id"]
+    ))
+
+
+    # Get current ranking
+    cursor.execute("""
+        SELECT
+            u.name AS student_name,
+            COALESCE(lqp.score, 0) AS score
+        FROM live_quiz_participants lqp
+        JOIN users u
+        ON lqp.student_id = u.id
+        WHERE lqp.live_quiz_id = %s
+        ORDER BY COALESCE(lqp.score, 0) DESC
+    """, (live_quiz_id,))
+
+    ranking = cursor.fetchall()
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+
+    return {
+        "success": True,
+        "correct": is_correct,
+        "ranking": ranking
+    }
+# GET LIVE QUIZ SCORE
+@app.route("/get_live_quiz_score/<int:live_quiz_id>")
+def get_live_quiz_score(live_quiz_id):
+
+    if "user_id" not in session or session["role"] != "student":
+        return {
+            "success": False,
+            "message": "Please login as student."
+        }
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT COALESCE(score, 0) AS score
+        FROM live_quiz_participants
+        WHERE live_quiz_id = %s
+        AND student_id = %s
+    """, (
+        live_quiz_id,
+        session["user_id"]
+    ))
+
+    result = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if not result:
+        return {
+            "success": False,
+            "message": "Score not found."
+        }
+
+    return {
+        "success": True,
+        "score": result["score"]
+    }
 
 # START LIVE QUIZ
 @app.route("/start_live_quiz/<int:live_quiz_id>")
@@ -1314,6 +1457,36 @@ def my_live_quizzes():
         quizzes=quizzes
     )
 
+# LIVE LEADERBOARD
+@app.route("/live_leaderboard/<int:live_quiz_id>")
+def live_leaderboard(live_quiz_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            u.name AS student_name,
+            lqp.score,
+            lqp.total_questions
+        FROM live_quiz_participants lqp
+        JOIN users u ON lqp.student_id = u.id
+        WHERE lqp.live_quiz_id = %s
+        ORDER BY lqp.score DESC
+    """, (live_quiz_id,))
+
+    leaderboard = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "live_leaderboard.html",
+        leaderboard=leaderboard
+    )
 # LIVE QUIZ RESULTS
 @app.route("/live_quiz_results/<int:live_quiz_id>")
 def live_quiz_results(live_quiz_id):

@@ -97,6 +97,58 @@
 
     </div>
 
+    
+<!-- LIVE QUIZ LEADERBOARD -->
+<div class="card leaderboard-card">
+
+    <h2 class="center">🏆 Live Quiz Ranking</h2>
+
+    <p class="center" style="color:#64748b;">
+        Learn • Compete • Climb the Leaderboard
+    </p>
+
+    {% if leaderboard %}
+
+        {% for student in leaderboard %}
+
+        <div class="leaderboard-row">
+
+            <div class="rank">
+                {% if loop.index == 1 %}
+                    🥇
+                {% elif loop.index == 2 %}
+                    🥈
+                {% elif loop.index == 3 %}
+                    🥉
+                {% else %}
+                    {{ loop.index }}
+                {% endif %}
+            </div>
+
+            <div class="student-name">
+                {% if student.id == session.get('user_id') %}
+                    {{ student.student_name }} (You)
+                {% else %}
+                    {{ student.student_name }}
+                {% endif %}
+            </div>
+
+            <div class="score">
+                {{ student.total_score }} pts
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p class="center">No rankings available yet. Join a Live Quiz to get started!</p>
+
+    {% endif %}
+
+</div>
+
 
     <!-- Quick Info -->
     <div class="card">
@@ -135,7 +187,6 @@
     padding:25px;
     margin-top:40px;
 ">
-    © 2026 QuizMaster | Online Quiz Management System
 </footer>
 
 <script>
