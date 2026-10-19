@@ -411,6 +411,40 @@ def dashboard():
     )
 
 
+# STUDENT / USER PROFILE
+@app.route("/profile")
+def profile():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    db = None
+    cursor = None
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT * FROM users WHERE id = %s",
+            (session["user_id"],)
+        )
+        user = cursor.fetchone()
+
+        if not user:
+            return redirect("/login")
+
+        return render_template("profile.html", user=user)
+
+    except Exception as e:
+        print("Profile Error:", e)
+        return "Profile load kartana error aala."
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
+
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
     if "user_id" not in session:
