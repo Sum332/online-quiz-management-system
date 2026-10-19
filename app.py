@@ -372,6 +372,7 @@ def dashboard():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
+    # Live Quiz Leaderboard
     cursor.execute("""
         SELECT
             u.id,
@@ -385,8 +386,18 @@ def dashboard():
         ORDER BY total_score DESC, u.name ASC
         LIMIT 10
     """)
-
     leaderboard = cursor.fetchall()
+
+    # Current student's quiz statistics
+    cursor.execute("""
+        SELECT
+            COUNT(*) AS total_attempts,
+            COALESCE(MAX(score), 0) AS best_score
+        FROM results
+        WHERE user_id = %s
+    """, (session["user_id"],))
+
+    stats = cursor.fetchone()
 
     cursor.close()
     db.close()
@@ -394,7 +405,9 @@ def dashboard():
     return render_template(
         "dashboard.html",
         name=session["user_name"],
-        leaderboard=leaderboard
+        leaderboard=leaderboard,
+        total_attempts=stats["total_attempts"],
+        best_score=stats["best_score"]
     )
 
 
@@ -591,6 +604,7 @@ def reject_admin(approval_token):
 
     return "Admin request rejected successfully."
 
+
 # ADD QUESTION
 @app.route("/add_question", methods=["GET", "POST"])
 def add_question():
@@ -608,14 +622,21 @@ def add_question():
         option_d = request.form["option_d"]
         correct_answer = request.form["correct_answer"]
 
+        year = request.form["year"]
+        subject = request.form["subject"]
+        chapter = request.form["chapter"]
+
         db = get_db_connection()
         cursor = db.cursor()
 
         cursor.execute("""
             INSERT INTO questions
-            (question, option_a, option_b, option_c, option_d,
-             correct_answer, created_by)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            (
+                question, option_a, option_b, option_c,
+                option_d, correct_answer, created_by,
+                year, subject, chapter
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             question,
             option_a,
@@ -623,7 +644,10 @@ def add_question():
             option_c,
             option_d,
             correct_answer,
-            session["user_id"]
+            session["user_id"],
+            year,
+            subject,
+            chapter
         ))
 
         db.commit()
@@ -872,7 +896,94 @@ def quiz():
         questions=questions,
         quiz_time=quiz_time
     )
+# UNIVERSITY SYLLABUS QUIZ
+@app.route("/university_quiz", methods=["GET", "POST"])
+def university_quiz():
 
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("role") != "student":
+        return redirect("/admin")
+
+    if request.method == "POST":
+        year = request.form.get("year")
+        subject = request.form.get("subject")
+        chapter = request.form.get("chapter")
+
+        if not year or not subject or not chapter:
+            return redirect("/university_syllabus")
+
+        session["university_quiz"] = {
+            "year": year,
+            "subject": subject,
+            "chapter": chapter
+        }
+
+    quiz_data = session.get("university_quiz")
+
+    if not quiz_data:
+        return redirect("/university_syllabus")
+
+    db = None
+    cursor = None
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT
+                id,
+                question,
+                option_a,
+                option_b,
+                option_c,
+                option_d,
+                correct_answer,
+                subject,
+                year,
+                chapter,
+                explanation,
+                exam_answer
+            FROM questions
+            WHERE year = %s
+              AND subject = %s
+              AND chapter = %s
+            ORDER BY id ASC
+            LIMIT 50
+            """,
+            (
+                quiz_data["year"],
+                quiz_data["subject"],
+                quiz_data["chapter"]
+            )
+        )
+
+        questions = cursor.fetchall()
+
+        if not questions:
+            return (
+                "Ya Unit sathi ajun questions add kelele nahit. "
+                "Pahile questions database madhe add karave lagtil."
+            )
+
+        return render_template(
+            "university_quiz.html",
+            questions=questions,
+            quiz_data=quiz_data
+        )
+
+    except Exception as e:
+        print("University Quiz Error:", e)
+        return "Quiz load kartana error aala. Terminal madhil error check kara."
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
 # ADMIN - VIEW STUDENT RESULTS
 @app.route("/admin_results")
 def admin_results():
@@ -1518,6 +1629,16 @@ def live_quiz_results(live_quiz_id):
         "live_quiz_results.html",
         results=results
     )
+#University Syllabus
+@app.route("/university_syllabus")
+def university_syllabus():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "student":
+        return redirect("/admin")
+
+    return render_template("university_syllabus.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

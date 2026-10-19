@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Syllabus | QuizMaster</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>University Syllabus</h1>
+        <p>Select your year, subject and chapter to practice syllabus-based questions.</p>
+
+        <div class="card">
+            <label for="year">Select Year</label>
+            <select id="year">
+                <option value="">Choose Year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+            </select>
+
+            <label for="subject">Select Subject</label>
+            <select id="subject" disabled>
+                <option value="">First select your year</option>
+            </select>
+
+        <br>
+
+        <label for="chapter">Select Unit</label>
+        <select id="chapter" disabled>
+            <option value="">First select your subject</option>
+</select>
+<br><br>
+
+<button type="button" id="startQuizBtn" disabled>
+    Start University Quiz
+</button>
+            <a href="/dashboard">Back to Dashboard</a>
+        </div>
+    </div>
+    
+
+<script>
+const yearDropdown = document.getElementById("year");
+const subjectDropdown = document.getElementById("subject");
+const chapterDropdown = document.getElementById("chapter");
+const startQuizBtn = document.getElementById("startQuizBtn");
+
+const subjectsByYear = {
+    "1st Year": [],
+    "2nd Year": [],
+    "3rd Year": [
+        "Software Engineering",
+        "Python Programming",
+        "PHP Programming",
+        "IKS In CS"
+    ]
+};
+
+const unitsBySubject = {
+    "Software Engineering": [
+        "Unit 1: The Nature of Software & Software Engineering",
+        "Unit 2: Software Process Structure & Models and Agile Development",
+        "Unit 3: Understanding Requirements & Design Concepts",
+        "Unit 4: Web App & Mobile App Design"
+    ],
+
+    "Python Programming": [
+        "Unit 1: Introduction",
+        "Unit 2: String Handling, Classes, Modules and Package",
+        "Unit 3: Exception Handling and Collections",
+        "Unit 4: GUI Programming and Database Connectivity Using Python"
+    ],
+
+    "PHP Programming": [
+        "Unit 1: Introduction to PHP",
+        "Unit 2: Programming with PHP",
+        "Unit 3: Using Functions",
+        "Unit 4: Class and Object"
+    ],
+
+    "IKS In CS": [
+        "Unit 1: Foundation of Indian Mathematics",
+        "Unit 2: Ancient of AI",
+        "Unit 3: Machine Learning",
+        "Unit 4: Neural Network"
+    ]
+};
+
+function resetUnits(message) {
+    chapterDropdown.innerHTML = "";
+    chapterDropdown.add(new Option(message, ""));
+    chapterDropdown.disabled = true;
+}
+
+yearDropdown.addEventListener("change", function () {
+    subjectDropdown.innerHTML = "";
+    subjectDropdown.add(new Option("Select Subject", ""));
+
+    if (subjectsByYear[yearDropdown.value]?.length) {
+        subjectDropdown.disabled = false;
+
+        subjectsByYear[yearDropdown.value].forEach(function (subject) {
+            subjectDropdown.add(new Option(subject, subject));
+        });
+    } else {
+        subjectDropdown.disabled = true;
+        subjectDropdown.innerHTML = "";
+        subjectDropdown.add(new Option("Subjects not added yet", ""));
+    }
+
+    resetUnits("First select your subject");
+});
+
+subjectDropdown.addEventListener("change", function () {
+    resetUnits("Select Unit");
+    console.log("Subject selected:", subjectDropdown.value);
+
+    const units = unitsBySubject[subjectDropdown.value];
+    console.log("Units found:", units);
+
+    if (units) {
+        chapterDropdown.disabled = false;
+
+        units.forEach(function (unit) {
+            chapterDropdown.add(new Option(unit, unit));
+        });
+    }
+});
+chapterDropdown.addEventListener("change", function () {
+    startQuizBtn.disabled = !chapterDropdown.value;
+});
+startQuizBtn.addEventListener("click", function () {
+    const year = yearDropdown.value;
+    const subject = subjectDropdown.value;
+    const chapter = chapterDropdown.value;
+
+    if (!year || !subject || !chapter) {
+        alert("Please select year, subject and unit.");
+        return;
+    }
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/university_quiz";
+
+    [
+        ["year", year],
+        ["subject", subject],
+        ["chapter", chapter]
+    ].forEach(function ([name, value]) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+});
+</script>
+
+</body>
+</html>

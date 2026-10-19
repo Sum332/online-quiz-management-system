@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Syllabus Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>University Syllabus Quiz</h1>
+
+        <p><strong>Year:</strong> {{ quiz_data.year }}</p>
+        <p><strong>Subject:</strong> {{ quiz_data.subject }}</p>
+        <p><strong>Unit:</strong> {{ quiz_data.chapter }}</p>
+
+        <hr>
+
+        <div id="quizArea">
+            <h2 id="questionNumber"></h2>
+            <h3 id="questionText"></h3>
+
+            <div id="optionsArea"></div>
+
+            <div id="feedback" style="display:none; margin-top:20px;">
+                <h3 id="feedbackTitle"></h3>
+                <p><strong>Correct Answer:</strong> <span id="correctAnswer"></span></p>
+                <p><strong>Explanation:</strong> <span id="explanation"></span></p>
+                <p><strong>Semester Exam Answer:</strong> <span id="examAnswer"></span></p>
+            </div>
+
+            <button type="button" id="nextBtn" disabled>Submit Answer</button>
+        </div>
+
+        <div id="finalResult" style="display:none;">
+            <h2>Quiz Completed!</h2>
+            <h3 id="scoreText"></h3>
+            <a href="/university_syllabus" class="btn">Choose Another Unit</a>
+            <a href="/dashboard" class="btn">Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="questions-data">
+{{ questions | tojson }}
+</script>
+
+<script>
+const questions = JSON.parse(
+    document.getElementById("questions-data").textContent
+);
+
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+
+const questionNumber = document.getElementById("questionNumber");
+const questionText = document.getElementById("questionText");
+const optionsArea = document.getElementById("optionsArea");
+const nextBtn = document.getElementById("nextBtn");
+const feedback = document.getElementById("feedback");
+
+function showQuestion() {
+    answered = false;
+    feedback.style.display = "none";
+    nextBtn.disabled = true;
+    nextBtn.textContent = "Submit Answer";
+    optionsArea.innerHTML = "";
+
+    const q = questions[currentIndex];
+
+    questionNumber.textContent =
+        `Question ${currentIndex + 1} of ${questions.length}`;
+    questionText.textContent = q.question;
+
+    [
+        ["A", q.option_a],
+        ["B", q.option_b],
+        ["C", q.option_c],
+        ["D", q.option_d]
+    ].forEach(([letter, value]) => {
+        const label = document.createElement("label");
+        label.style.display = "block";
+        label.style.margin = "12px 0";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "answer";
+        radio.value = letter;
+        radio.addEventListener("change", () => {
+            nextBtn.disabled = false;
+        });
+
+        label.appendChild(radio);
+        label.appendChild(
+            document.createTextNode(" " + letter + ". " + value)
+        );
+        optionsArea.appendChild(label);
+    });
+}
+
+nextBtn.addEventListener("click", function () {
+    const selected = document.querySelector('input[name="answer"]:checked');
+
+    if (!answered) {
+        if (!selected) return;
+
+        answered = true;
+        const q = questions[currentIndex];
+        const isCorrect =
+            selected.value.toLowerCase() ===
+            String(q.correct_answer).trim().toLowerCase();
+
+        if (isCorrect) score++;
+
+        document.querySelectorAll('input[name="answer"]').forEach(input => {
+            input.disabled = true;
+        });
+
+        document.getElementById("feedbackTitle").textContent =
+            isCorrect ? "Correct Answer!" : "Incorrect Answer";
+
+        document.getElementById("correctAnswer").textContent =
+            q.correct_answer;
+
+        document.getElementById("explanation").textContent =
+            q.explanation || "Explanation will be available soon.";
+
+        document.getElementById("examAnswer").textContent =
+            q.exam_answer || "Semester exam answer will be available soon.";
+
+        feedback.style.display = "block";
+        nextBtn.textContent =
+            currentIndex === questions.length - 1
+                ? "View Result"
+                : "Next Question";
+    } else {
+        currentIndex++;
+
+        if (currentIndex < questions.length) {
+            showQuestion();
+        } else {
+            document.getElementById("quizArea").style.display = "none";
+            document.getElementById("finalResult").style.display = "block";
+            document.getElementById("scoreText").textContent =
+                `Your Score: ${score} / ${questions.length}`;
+        }
+    }
+});
+
+if (questions.length > 0) {
+    showQuestion();
+}
+</script>
+
+</body>
+</html>
