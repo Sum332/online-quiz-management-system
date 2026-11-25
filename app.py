@@ -656,16 +656,11 @@ def add_question():
         option_d = request.form["option_d"]
         correct_answer = request.form["correct_answer"]
 
-        year = request.form["year"]
-        subject = request.form["subject"]
-        chapter = request.form["chapter"]
-
         db = get_db_connection()
         cursor = db.cursor()
 
         cursor.execute("""
-            INSERT INTO questions
-            (
+            INSERT INTO questions (
                 question, option_a, option_b, option_c,
                 option_d, correct_answer, created_by,
                 year, subject, chapter
@@ -679,9 +674,9 @@ def add_question():
             option_d,
             correct_answer,
             session["user_id"],
-            year,
-            subject,
-            chapter
+            None,
+            "General",
+            None
         ))
 
         db.commit()
@@ -691,7 +686,6 @@ def add_question():
         return redirect("/admin")
 
     return render_template("add_question.html")
-
 # VIEW QUESTIONS
 @app.route("/view_questions")
 def view_questions():
@@ -876,8 +870,11 @@ def quiz():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    # Get all questions
-    cursor.execute("SELECT * FROM questions")
+    # Get only Normal Quiz questions
+    cursor.execute("""
+    SELECT * FROM questions
+    WHERE subject = 'General'
+""")
     questions = cursor.fetchall()
     cursor.execute("SELECT quiz_time FROM quiz_settings WHERE id = 1")
     quiz_setting = cursor.fetchone()
