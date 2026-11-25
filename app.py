@@ -673,10 +673,10 @@ def add_question():
             option_c,
             option_d,
             correct_answer,
-            session["user_id"],
-            None,
-            "General",
-            None
+           session["user_id"],
+           "Not Assigned",
+           "General",
+           "Not Assigned"
         ))
 
         db.commit()
