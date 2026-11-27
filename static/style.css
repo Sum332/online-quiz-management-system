@@ -1576,7 +1576,8 @@ select:focus {
 .video-content {
   position: relative;
   z-index: 2;
-  color: white;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
   text-align: center;
   padding: 25px;
 }
@@ -1584,12 +1585,15 @@ select:focus {
 .video-content h2 {
   font-size: 32px;
   margin-bottom: 12px;
-  color: white;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 .video-content p {
   font-size: 16px;
   line-height: 1.6;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 @media (max-width: 600px) {
@@ -1717,17 +1721,17 @@ select:focus {
 ===================================== */
 
 :root {
-    --primary: #1F3A5F;
-    --accent: #5AA9E6;
-    --background: #EAF4F4;
-    --text: #222831;
-    --white: #FFFFFF;
+  --primary: #1f3a5f;
+  --accent: #5aa9e6;
+  --background: #eaf4f4;
+  --text: #222831;
+  --white: #ffffff;
 }
 
 /* Main Background */
 body {
-    background: var(--background) !important;
-    color: var(--text) !important;
+  background: var(--background) !important;
+  color: var(--text) !important;
 }
 
 /* Headings */
@@ -1736,25 +1740,25 @@ h2,
 h3,
 .stat-content h1,
 .stat-content h3 {
-    color: var(--primary) !important;
-    background: none !important;
-    -webkit-text-fill-color: var(--primary) !important;
+  color: var(--primary) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--primary) !important;
 }
 
 /* Navbar - Admin and Student */
 .nav,
 .navbar {
-    background: var(--primary) !important;
+  background: var(--primary) !important;
 }
 
 .nav a,
 .navbar a {
-    color: var(--white) !important;
+  color: var(--white) !important;
 }
 
 .nav a:hover,
 .navbar a:hover {
-    color: var(--accent) !important;
+  color: var(--accent) !important;
 }
 
 /* Cards */
@@ -1767,158 +1771,158 @@ h3,
 .leaderboard-card,
 .stat-card,
 .student-stat-card {
-    background: var(--white) !important;
-    color: var(--text) !important;
-    border-color: #D5E5EB !important;
+  background: var(--white) !important;
+  color: var(--text) !important;
+  border-color: #d5e5eb !important;
 }
 
 /* Buttons */
 button,
 .btn,
 .admin-action {
-    background: var(--accent) !important;
-    color: var(--white) !important;
+  background: var(--accent) !important;
+  color: var(--white) !important;
 }
 
 button:hover,
 .btn:hover {
-    background: var(--primary) !important;
-    color: var(--white) !important;
+  background: var(--primary) !important;
+  color: var(--white) !important;
 }
 
 /* Links */
 a {
-    color: var(--primary);
+  color: var(--primary);
 }
 
 a:hover {
-    color: var(--accent);
+  color: var(--accent);
 }
 
 /* Inputs */
 input,
 textarea,
 select {
-    background: var(--white) !important;
-    color: var(--text) !important;
-    border-color: #C7DCE5 !important;
+  background: var(--white) !important;
+  color: var(--text) !important;
+  border-color: #c7dce5 !important;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-    border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(90, 169, 230, 0.18) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(90, 169, 230, 0.18) !important;
 }
 
 /* Quiz Options */
 .option {
-    background: var(--background) !important;
-    color: var(--text) !important;
-    border-color: #D5E5EB !important;
+  background: var(--background) !important;
+  color: var(--text) !important;
+  border-color: #d5e5eb !important;
 }
 
 .option:hover {
-    background: #D9EBF7 !important;
-    border-color: var(--accent) !important;
+  background: #d9ebf7 !important;
+  border-color: var(--accent) !important;
 }
 
 /* Timer */
 .quiz-timer,
 .timer-box {
-    background: var(--primary) !important;
-    color: var(--white) !important;
-    border-color: var(--accent) !important;
+  background: var(--primary) !important;
+  color: var(--white) !important;
+  border-color: var(--accent) !important;
 }
 
 /* Results and Scores */
 .score {
-    color: var(--primary) !important;
-    background: none !important;
-    -webkit-text-fill-color: var(--primary) !important;
+  color: var(--primary) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--primary) !important;
 }
 
 .result-box {
-    background: var(--background) !important;
+  background: var(--background) !important;
 }
 
 /* Admin Tables */
 .students-table th,
 .results-table th {
-    background: var(--primary) !important;
-    color: var(--white) !important;
+  background: var(--primary) !important;
+  color: var(--white) !important;
 }
 
 .students-table td,
 .results-table td {
-    color: var(--text);
+  color: var(--text);
 }
 
 .students-table tbody tr:hover,
 .results-table tbody tr:hover {
-    background: var(--background) !important;
+  background: var(--background) !important;
 }
 
 /* Admin Statistics */
 .stat-icon {
-    background: #D9EBF7 !important;
+  background: #d9ebf7 !important;
 }
 
 .stat-content p,
 .stat-content h3 {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 /* Student Dashboard Cards */
 .student-stat-card h3 {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 .student-stat-card:hover {
-    border-color: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 
 /* Leaderboard */
 .leaderboard-row {
-    background: var(--background) !important;
-    border-color: #D5E5EB !important;
+  background: var(--background) !important;
+  border-color: #d5e5eb !important;
 }
 
 .leaderboard-card h2,
 .leaderboard-card .student-name {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 /* Profile */
 .profile-info-item,
 .motivation-box {
-    background: var(--background) !important;
+  background: var(--background) !important;
 }
 
 .motivation-box strong {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 /* Dashboard Video Overlay */
 .video-overlay {
-    background: linear-gradient(
-        90deg,
-        rgba(31, 58, 95, 0.88),
-        rgba(31, 58, 95, 0.35)
-    ) !important;
+  background: linear-gradient(
+    90deg,
+    rgba(31, 58, 95, 0.88),
+    rgba(31, 58, 95, 0.35)
+  ) !important;
 }
 
 /* Mobile Menu */
 @media (max-width: 768px) {
-    .nav-links {
-        background: var(--primary) !important;
-    }
+  .nav-links {
+    background: var(--primary) !important;
+  }
 
-    .nav-links a {
-        color: var(--white) !important;
-    }
+  .nav-links a {
+    color: var(--white) !important;
+  }
 
-    .nav-links a:hover {
-        background: #294B75 !important;
-    }
+  .nav-links a:hover {
+    background: #294b75 !important;
+  }
 }
