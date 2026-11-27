@@ -299,6 +299,7 @@ def login():
 
     return render_template("login.html")
 
+
 # ADMIN DASHBOARD
 @app.route("/admin")
 def admin():
@@ -311,13 +312,36 @@ def admin():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT COUNT(*) AS total_students FROM users WHERE role = 'student'")
+    cursor.execute("""
+        SELECT COUNT(*) AS total_students
+        FROM users
+        WHERE role = 'student'
+    """)
     total_students = cursor.fetchone()["total_students"]
 
-    cursor.execute("SELECT COUNT(*) AS total_questions FROM questions")
-    total_questions = cursor.fetchone()["total_questions"]
+    # Normal Quiz Questions
+    cursor.execute("""
+        SELECT COUNT(*) AS normal_questions
+        FROM questions
+        WHERE subject = 'General'
+    """)
+    normal_questions = cursor.fetchone()["normal_questions"]
 
-    cursor.execute("SELECT COUNT(*) AS total_results FROM results")
+    # University Questions
+    cursor.execute("""
+        SELECT COUNT(*) AS university_questions
+        FROM questions
+        WHERE subject != 'General'
+    """)
+    university_questions = cursor.fetchone()["university_questions"]
+
+    # Total Questions
+    total_questions = normal_questions + university_questions
+
+    cursor.execute("""
+        SELECT COUNT(*) AS total_results
+        FROM results
+    """)
     total_results = cursor.fetchone()["total_results"]
 
     cursor.close()
@@ -328,6 +352,8 @@ def admin():
         name=session["user_name"],
         total_students=total_students,
         total_questions=total_questions,
+        normal_questions=normal_questions,
+        university_questions=university_questions,
         total_results=total_results
     )
 
@@ -686,6 +712,7 @@ def add_question():
         return redirect("/admin")
 
     return render_template("add_question.html")
+
 # VIEW QUESTIONS
 @app.route("/view_questions")
 def view_questions():
@@ -695,22 +722,27 @@ def view_questions():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    if session["user_id"] == 2:
-        # The Main Admin will be able to see all the questions.
-        cursor.execute(
-            "SELECT * FROM questions ORDER BY id DESC"
-        )
-    else:
-        # The teacher will only see their own questions.
-        cursor.execute(
-            """
-            SELECT * FROM questions
-            WHERE created_by = %s
-            ORDER BY id DESC
-            """,
-            (session["user_id"],)
-        )
+    question_type = request.args.get("type", "all")
 
+    query = "SELECT * FROM questions WHERE 1=1"
+    params = []
+
+    # Normal Questions
+    if question_type == "normal":
+        query += " AND subject = 'General'"
+
+    # University Questions
+    elif question_type == "university":
+        query += " AND subject != 'General'"
+
+    # Teacher can see only their own questions
+    if session["user_id"] != 2:
+        query += " AND created_by = %s"
+        params.append(session["user_id"])
+
+    query += " ORDER BY id DESC"
+
+    cursor.execute(query, params)
     questions = cursor.fetchall()
 
     cursor.close()
@@ -1203,6 +1235,7 @@ def reset_password(reset_token):
     </html>
     """
 
+
 # CREATE LIVE QUIZ
 @app.route("/create_live_quiz", methods=["GET", "POST"])
 def create_live_quiz():
@@ -1212,18 +1245,20 @@ def create_live_quiz():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    # Main Admin sees all questions
+    # Only Normal Quiz Questions (General)
     if session["user_id"] == 2:
-        cursor.execute("SELECT * FROM questions ORDER BY id DESC")
-    else:
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT * FROM questions
-            WHERE created_by = %s
+            WHERE subject = 'General'
             ORDER BY id DESC
-            """,
-            (session["user_id"],)
-        )
+        """)
+    else:
+        cursor.execute("""
+            SELECT * FROM questions
+            WHERE subject = 'General'
+            AND created_by = %s
+            ORDER BY id DESC
+        """, (session["user_id"],))
 
     questions = cursor.fetchall()
 
@@ -1234,34 +1269,33 @@ def create_live_quiz():
         # Timer in minutes
         duration_minutes = float(request.form["duration"])
         duration_seconds = int(duration_minutes * 60)
+
         import random
         game_pin = str(random.randint(100000, 999999))
 
-        cursor.execute(
-            """
+        cursor.execute("""
             INSERT INTO live_quizzes
             (teacher_id, game_pin, quiz_title, duration)
             VALUES (%s, %s, %s, %s)
-            """,
-            (
-                session["user_id"],
-                game_pin,
-                quiz_title,
-                duration_seconds
-            )
-        )
+        """, (
+            session["user_id"],
+            game_pin,
+            quiz_title,
+            duration_seconds
+        ))
 
         live_quiz_id = cursor.lastrowid
 
+        # Allow only displayed General questions
+        allowed_ids = {str(q["id"]) for q in questions}
+
         for question_id in selected_questions:
-            cursor.execute(
-                """
-                INSERT INTO live_quiz_questions
-                (live_quiz_id, question_id)
-                VALUES (%s, %s)
-                """,
-                (live_quiz_id, question_id)
-            )
+            if question_id in allowed_ids:
+                cursor.execute("""
+                    INSERT INTO live_quiz_questions
+                    (live_quiz_id, question_id)
+                    VALUES (%s, %s)
+                """, (live_quiz_id, question_id))
 
         db.commit()
 

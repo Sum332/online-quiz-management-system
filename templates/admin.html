@@ -73,8 +73,8 @@
 
         </div>
 
-        <!-- Admin Statistics -->
-
+        
+<!-- Admin Statistics -->
 <div class="admin-statistics">
 
     <a href="/admin/students" class="stat-card">
@@ -92,6 +92,24 @@
             <h3>Total Questions</h3>
             <h1>{{ total_questions }}</h1>
             <p>View All Questions →</p>
+        </div>
+    </a>
+
+    <a href="/view_questions?type=normal" class="stat-card">
+        <div class="stat-icon">📘</div>
+        <div class="stat-content">
+            <h3>Normal Questions</h3>
+            <h1>{{ normal_questions }}</h1>
+            <p>Normal Quiz Questions</p>
+        </div>
+    </a>
+
+    <a href="/view_questions?type=university" class="stat-card">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-content">
+            <h3>University Questions</h3>
+            <h1>{{ university_questions }}</h1>
+            <p>University Syllabus Questions</p>
         </div>
     </a>
 
@@ -133,90 +151,30 @@
 
 </div>
 
-        <!-- Quiz Timer -->
-        <div class="card admin-setting-card">
 
-            <div class="setting-header">
+<!-- Admin Study Video Banner -->
+<section class="dashboard-video">
 
-                <div class="setting-icon">
-                    ⏱️
-                </div>
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="{{ url_for('static', filename='videos/study-bg.mp4') }}"
+                type="video/mp4">
+    </video>
 
-                <div>
+    <div class="video-overlay"></div>
 
-                    <h2>
-                        Quiz Time Control
-                    </h2>
+    <div class="video-content">
+        <h2>Learn. Manage. Achieve. 🎓</h2>
 
-                    <p class="subtitle">
-                        Set the time limit for the entire quiz.
-                    </p>
+        <p>
+            Manage your quizzes, guide students
+            and make learning better every day.
+        </p>
+    </div>
 
-                </div>
-
-            </div>
-
-
-            <form action="/admin/set-quiz-time"
-                  method="POST"
-                  class="timer-form">
-
-                <label for="quiz_time">
-                    Choose Quiz Duration
-                </label>
-
-                <select name="quiz_time"
-                        id="quiz_time"
-                        required>
-
-                    <option value="">
-                        Select Quiz Time
-                    </option>
-
-                    <option value="0.5">
-                        30 Seconds
-                    </option>
-
-                    <option value="1">
-                        1 Minute
-                    </option>
-
-                    <option value="2">
-                        2 Minutes
-                    </option>
-
-                    <option value="5">
-                        5 Minutes
-                    </option>
-
-                    <option value="10">
-                        10 Minutes
-                    </option>
-
-                    <option value="15">
-                        15 Minutes
-                    </option>
-
-                    <option value="20">
-                        20 Minutes
-                    </option>
-
-                    <option value="30">
-                        30 Minutes
-                    </option>
-
-                </select>
-
-                <button type="submit" class="btn">
-                    💾 Save Quiz Time
-                </button>
-
-            </form>
-
-        </div>
+</section>
 
 
-        <!-- Admin Information -->
+<!-- Admin Information -->
         <div class="admin-info">
 
             <div class="info-item">
